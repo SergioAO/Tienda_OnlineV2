@@ -1,0 +1,10 @@
+<!-- templates/productos.html.twig -->
+{% for producto in productos %}
+    <div class="product-card">
+        <img src="{{ asset('images/' ~ producto.imagen) }}" alt="{{ producto.nombre }}">
+        <h3>{{ producto.nombre }}</h3>
+        <p>{{ producto.precio }} €</p>
+        <button class="btn btn-primary">Agregar al carrito</button>
+        <button class="btn btn-secondary">Comprar ahora</button>
+    </div>
+{% endfor %}

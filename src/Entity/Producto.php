@@ -30,7 +30,7 @@ class Producto
     private ?string $categoria = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private ?string $material = null;
+    private ?string $marca = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $color = null;
@@ -111,14 +111,14 @@ class Producto
         return $this;
     }
 
-    public function getMaterial(): ?string
+    public function getMarca(): ?string
     {
-        return $this->material;
+        return $this->marca;
     }
 
-    public function setMaterial(string $material): self
+    public function setMarca(string $marca): self
     {
-        $this->material = $material;
+        $this->marca = $marca;
         return $this;
     }
 

@@ -1,17 +1,24 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Electro-Gamer{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('build/vendors-node_modules_bootstrap-icons_font_bootstrap-icons_css-node_modules_bootstrap_dist_css-b08609.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/styles.css') }}">
+</head>
     <body>
-        {% block body %}{% endblock %}
+        <header class="fixed-top">
+            {% block header %}
+                {% include 'componentes/cabecera.html.twig' %}
+            {% endblock %}
+        </header>
+
+
+        <main role="main" class="container" style="margin-top: 80px;">
+            {% block body %}{% endblock %}
+        </main>
+
+        {% block footer %}{% endblock %}
     </body>
 </html>
