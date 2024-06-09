@@ -29,13 +29,33 @@ class HomeController extends AbstractController
             ->getQuery()
             ->getResult();
 
-        // Obtener los productos de la primera categoría por defecto
-        $productos = $this->entityManager->getRepository(Producto::class)
-            ->findBy(['categoria' => $categorias[0]['categoria']]);
+        $marcas = $this->entityManager->createQueryBuilder()
+            ->select('DISTINCT p.marca')
+            ->from(Producto::class, 'p')
+            ->getQuery()
+            ->getResult();
+
+
+        $productos = [];
+        $productos_marca = [];
+
+        if (count($categorias) > 0) {
+            // Obtener los productos de la primera categoría por defecto
+            $productos = $this->entityManager->getRepository(Producto::class)
+                ->findBy(['categoria' => $categorias[0]['categoria']]);
+        }
+
+        if (count($marcas) > 0) {
+            // Obtener los productos de la primera marca por defecto
+            $productos_marca = $this->entityManager->getRepository(Producto::class)
+                ->findBy(['marca' => $marcas[0]['marca']]);
+        }
 
         return $this->render('home/home.html.twig', [
             'categorias' => $categorias,
-            'productos' => $productos
+            'productos' => $productos,
+            'marcas' => $marcas,
+            'productos_marca' => $productos_marca
         ]);
     }
 
