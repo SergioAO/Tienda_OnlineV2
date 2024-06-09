@@ -22,17 +22,28 @@ class ProductoRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return string[] Returns an array of unique categories
+     * @param string $categoria
+     * @return Producto[] Returns an array of Producto objects filtered by category
      */
-    public function findCategorias(): array
+    public function findByCategoria(string $categoria): array
     {
-        $entityManager = $this->getEntityManager();
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.categoria = :categoria')
+            ->setParameter('categoria', $categoria)
+            ->getQuery()
+            ->getResult();
+    }
 
-        $query = $entityManager->createQuery(
-            'SELECT DISTINCT p.categoria
-            FROM App\Entity\Producto p'
-        );
-
-        return $query->getResult();
+    /**
+     * @param string $marca
+     * @return Producto[] Returns an array of Producto objects filtered by brand
+     */
+    public function findByMarca(string $marca): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.marca = :marca')
+            ->setParameter('marca', $marca)
+            ->getQuery()
+            ->getResult();
     }
 }

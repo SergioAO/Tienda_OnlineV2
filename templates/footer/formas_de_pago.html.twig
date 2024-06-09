@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="fw-bold">Formas de Pago en Electro Gamer</h1>
+
+        <div class="mb-5">
+            <h2 class="section-title">Tarjeta de Débito o Crédito</h2>
+            <p>Esta forma de pago es inmediata, cómoda y segura. Al terminar tu pedido, nuestra pasarela de pagos comunica con tu banco para autorizar y procesar el pago. Electro Gamer no recibe estos datos ni tiene acceso a ellos. Un pedido por tarjeta se puede pagar en la hora siguiente a su confirmación. Pasado ese tiempo, si no llega el pago, el pedido será anulado automáticamente.</p>
+            <p>En los pagos realizados por tarjeta, por seguridad y cumplimiento de la normativa PSD2, tu banco establece un proceso por el cual te enviará un código al móvil para finalizar el pago, (por SMS o notificación), para así autorizar tu compra.</p>
+            <p>Para posteriores compras, nuestro sistema puede recordar tus datos de tarjeta, indicando que deseas guardar los datos de la tarjeta al realizar la primera compra. Si deseas desactivar esta funcionalidad, solo tienes que acceder a la sección "Tarjetas vinculadas" de tu cuenta de usuario y eliminar la tarjeta que corresponda.</p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Bizum</h2>
+            <p>Bizum es la solución de pagos a través del móvil, impulsada por la banca española, instantánea, rápida, cómoda y universal. Actualmente, permite realizar pagos entre particulares, donaciones a ONG y pagar en los comercios online.</p>
+            <h5>¿Cómo darse de alta en Bizum?</h5>
+            <p>Tienes que comprobar que tu banco tiene integrado Bizum. Puedes ver una lista de los bancos con Bizum en este enlace: <a href="https://bizum.es/activar-bizum/" target="_blank">https://bizum.es/activar-bizum/</a></p>
+            <p>Si ya tienes descargada la App de tu banco en tu móvil, tienes que ir al apartado correspondiente a Bizum para activarlo y darte de alta.</p>
+            <p>El proceso es muy rápido y sencillo. Una vez dado de alta tendrás tu clave PIN, necesaria para realizar pagos con Bizum. Es una clave única para todas las compras, compuesta por 4 dígitos, que solo conocerás tú y que podrás modificar cuando quieras.</p>
+            <p><em>*En algunos Bancos es necesario verificar que tienes habilitado el pago con comercios, además del pago a particulares. Consulta con tu banco para más información sobre los pagos por Bizum en comercios.</em></p>
+            <h5>¿Cómo pagar con Bizum en Electro Gamer?</h5>
+            <p>Para poder pagar con Bizum en Electro Gamer, simplemente necesitas la clave PIN de Bizum. Funciona de forma similar al PIN de una tarjeta. Te explicamos cómo es el proceso de pago:</p>
+            <ul>
+                <li>Elige Bizum para pagar el pedido en nuestra web, dentro de las opciones de pago.</li>
+                <li>En la pantalla que aparece, introduce el número de teléfono asociado a Bizum y el Pin (código de 4 letras que te proporciona el Banco).</li>
+                <li>A continuación, recibes en el teléfono, vía SMS o notificación de la App del banco, un código de confirmación de la compra que debes introducir en la ventana de pago que aparece y finalizas el pago.</li>
+                <li>Te indicaremos que el pago ha sido realizado con éxito y comenzaremos a preparar tu pedido.</li>
+            </ul>
+            <p>En caso de error o fallo en el pago, no se carga ningún importe en tu cuenta y tendrás que consultar con tu banco para saber el motivo del rechazo o el error en el pago.</p>
+            <h5>Abonos y Devoluciones</h5>
+            <p>Las devoluciones de pagos por Bizum son inmediatas. Si eliminas el pedido y no ha sido enviado, la devolución se produce de forma automática.</p>
+            <p>Si el pedido ha sido enviado y es rechazado o se realiza una devolución posterior, efectuaremos el abono del importe cuando recibamos el pedido devuelto. Una vez realizado el abono tendrás tu importe devuelto en tu cuenta.</p>
+            <h5>Otra información importante</h5>
+            <p>El importe mínimo para usar Bizum es de 0,50 €. La posibilidad de usar este servicio estará sujeta a la disponibilidad de cada entidad bancaria.</p>
+            <p>Cada banco establece un límite máximo para pagos en Bizum, normalmente está entre 300 y 1000 euros, pero depende de cada entidad. Si vas a realizar una compra en Electro Gamer de un importe alto y quieres pagar por Bizum, consulta antes con tu banco para que amplíen tu límite. En Electro Gamer permitimos el pago de pedidos por Bizum hasta 1000 €.</p>
+            <p>Para cualquier otra duda puedes consultarlo a través de los servicios de Atención al Cliente de tu entidad o acceder a la página de Bizum aquí: <a href="https://bizum.es/" target="_blank">https://bizum.es/</a></p>
+            <p><em>Los pedidos a vendedores externos (Marketplace) o de artículos reacondicionados no admiten esta forma de pago.</em></p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Transferencia directa (inmediata)</h2>
+            <p>Esta forma de pago se encuentra desactivada temporalmente.</p>
+            <p>A través de nuestra pasarela de pagos, Inespay, puedes pagar tus pedidos mediante transferencia inmediata desde tu cuenta bancaria. Es un pago directo, muy similar al pago por tarjeta o bizum.</p>
+            <h5>Para ello, sigue estos sencillos pasos:</h5>
+            <ul>
+                <li>Selecciona "Transferencia Inmediata" como método de pago en nuestro proceso de compra, dentro de la pestaña "Otras Formas de Pago".</li>
+                <li>Cuando finalices el pedido, pasarás a la pasarela de pago, en la cual tienes que elegir de la lista el banco donde tienes la cuenta, desde la cual se va a realizar el pago.</li>
+                <li>Una vez elegido el banco, el proceso te pedirá tus claves de banca online (usuario y contraseña).</li>
+                <li>Una vez has accedido a tu banca online, se mostrará una ventana con los datos de la transferencia a realizar y solo tendrás que introducir una clave que será enviada al teléfono que tienes relacionado con tu cuenta.</li>
+                <li>Si el proceso se ha realizado correctamente, tendrás la confirmación del pago en pocos segundos.</li>
+            </ul>
+            <p>Tienes más información sobre las transferencias inmediatas en la web de Inespay: <a href="https://www.inespay.com/tiendasonline/" target="_blank">https://www.inespay.com/tiendasonline/</a></p>
+            <h5>A tener en cuenta:</h5>
+            <p>Si el proceso de pago por transferencia es correcto, tu pedido se comienza a preparar de inmediato, al igual que ocurre con los pedidos pagados por tarjeta o bizum.</p>
+            <p>Si tienes problemas para realizar la transferencia desde tu cuenta bancaria, contacta con tu banco.</p>
+            <p>Las devoluciones de estos pagos no son inmediatas, sino que siguen el proceso de devolución como una transferencia normal, es decir, recibirás la devolución por transferencia normal entre las 24 - 36 horas (depende de cada banco), desde que hacemos el proceso de abono (sin contar fines de semana y/o festivos).</p>
+            <p><em>Los pedidos a vendedores externos (Marketplace) o de artículos reacondicionados no admiten esta forma de pago.</em></p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Transferencia ordinaria</h2>
+            <p>Puedes ordenar el pago a estas cuentas:</p>
+            <ul>
+                <li>BBVA: ES18 0182 3204 17 0201514921 - SWIFT/BIC: BBVAESMM</li>
+                <li>Cajamar: ES03 3058 0202 09 2720013704 - BIC-SWIFT: CCRIES2A</li>
+            </ul>
+            <p><strong>IMPORTANTE:</strong> Indica en el concepto de la transferencia el número del pedido completo. Nuestro sistema lo localizará automáticamente. No es necesario que nos envíes el justificante de la transferencia. Enviaremos el pedido tras la confirmación del pago.</p>
+            <p>Las transferencias desde entidades distintas pueden tardar hasta dos días hábiles en llegarnos (sin contar fines de semana ni festivos), según la normativa bancaria. Mantenemos activos los pedidos por transferencia durante cuatro días naturales, pasado ese tiempo, si no se ha confirmado el pago el pedido se anulará automáticamente.</p>
+            <p><em>Los pedidos a vendedores externos (Marketplace) o de artículos reacondicionados no admiten esta forma de pago.</em></p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Financiación con Cetelem</h2>
+            <p>Cuando elijas alguna variante de esta forma de pago, nuestra web te redirigirá a la página de Cetelem. Al aprobar tu solicitud, nos enviarán el pago por transferencia. Ten en cuenta que, en los pedidos por financiación no se reservan artículos hasta que llega el pago, por lo que cuando este llegue, su disponibilidad en la web puede haber cambiado.</p>
+            <p>Si utilizas una firma digital, o ya tienes línea de crédito con Cetelem, tu financiación queda aprobada en 24 horas laborables.</p>
+            <p>Cetelem financia a particulares y pensionistas, no financia a empresas. Para realizar una financiación, necesitarás una fotografía del DNI o tarjeta de residencia en vigor, la última nómina si eres asalariado y un certificado de titularidad de cuenta bancaria o copia de la primera página de la libreta o cartilla, en las que se indique el IBAN. Si eres pensionista, deberás presentar la carta de revalorización de la pensión.</p>
+            <p>Cetelem acepta únicamente compras con dirección de facturación en España. Los clientes que deseen financiar su compra directamente en alguna de nuestras tiendas, deberán aportar los documentos originales mencionados anteriormente. También, será necesaria la presencia física del titular que vaya a realizar la financiación.</p>
+            <p><em>Los pedidos a vendedores externos (Marketplace) o de artículos reacondicionados no admiten esta forma de pago.</em></p>
+            <h5>Más información aquí: <a href="https://www.pccomponentes.com/financiacion" target="_blank">https://www.pccomponentes.com/financiacion</a></h5>
+            <h5>Condiciones Generales (fuera de campañas):</h5>
+            <ul>
+                <li>Financiación ofrecida por Banco Cetelem S.A.U. válido hasta 31 - 12 - 2024. Sistema de amortización francés.</li>
+                <li>Financiación en 6, 12, 18, y 24 meses (con comisión de formalización), y 30, 36 y 48 meses con Interés mensual.</li>
+                <li>6 MESES: Importe mínimo: 90 €. Ejemplo de financiación para un importe de 600,00 € en 06 meses. Comisión de formalización del 3,00%: 18,00 € a pagar en la primera cuota. Primera cuota de 118,00 € y 05 cuotas de 100,00 €. TIN 0,0% TAE 10,95%. Coste total del crédito: 18,00 €. Importe total adeudado y precio total a plazos: 618,00 €. Precio de adquisición al contado: 600,00 €. Intereses subvencionados por Electro Gamer.</li>
+                <li>12 MESES: Importe mínimo: 144 €. Ejemplo de financiación para un importe de 600,00 € en 12 meses. Comisión de formalización del 6,00%: 36,00 € a pagar en la primera cuota. Primera cuota de 86,00 € y 11 cuotas de 50,00 €. TIN 0,0% TAE 12,09%. Coste total del crédito: 36,00 €. Importe total adeudado y precio total a plazos: 636,00 €. Precio de adquisición al contado: 600,00 €. Intereses subvencionados por Electro Gamer.</li>
+                <li>18 MESES: Importe mínimo: 216 €. Ejemplo de financiación para un importe de 540,00 € en 18 meses. Comisión de formalización del 6,00%: 32,40 € a pagar en la primera cuota. Primera cuota de 62,40 € y 17 cuotas de 30,00 €. TIN 0,0% TAE 8,15%. Coste total del crédito: 32,40 €. Importe total adeudado y precio total a plazos: 572,40 €. Precio de adquisición al contado: 540,00 €. Intereses subvencionados por Electro Gamer.</li>
+                <li>20 MESES: Importe mínimo: 240 €. Ejemplo de financiación para un importe de 600,00 € en 20 meses. Comisión de formalización del 7,00%: 42,00 € a pagar en la primera cuota. Primera cuota de 72,00 € y 19 cuotas de 30,00 €. TIN 0,0% TAE 8,68%. Coste total del crédito: 42,00 €. Importe total adeudado y precio total a plazos: 642,00 €. Precio de adquisición al contado: 600,00 €. Intereses subvencionados por Electro Gamer.</li>
+                <li>24 MESES: Importe mínimo: 288 €. Ejemplo de financiación para un importe de 600,00 € en 24 meses. Comisión de formalización del 9,00%: 54,00 € a pagar en la primera cuota. Primera cuota de 79,00 € y 23 cuotas de 25,00 €. TIN 0,0% TAE 9,54%. Coste total del crédito: 54,00 €. Importe total adeudado y precio total a plazos: 654,00 €. Precio de adquisición al contado: 600,00 €. Intereses subvencionados por Electro Gamer.</li>
+                <li>30 MESES: Importe mínimo: 360 €. Ejemplo de financiación para un importe de 1.200,00 € en 30 meses. Primera cuota de 48,21 €. 28 cuotas de 48,21 € y una última cuota de 48,12 €. TIN 14,99% TAE 16,06%. Total intereses: 246,21 €. Coste total del crédito: 246,21 €. Importe total adeudado y precio total a plazos: 1.446,21 €. Precio de adquisición al contado: 1.200,00 €. Sistema de amortización francés.</li>
+                <li>36 MESES: Importe mínimo: 432 €. Ejemplo de financiación para un importe de 1.200,00 € en 36 meses. Primera cuota de 41,59 €. 34 cuotas de 41,59 € y una última cuota de 41,72 €. TIN 14,99% TAE 16,06%. Total intereses: 297,37 €. Coste total del crédito: 297,37 €. Importe total adeudado y precio total a plazos: 1.497,37 €. Precio de adquisición al contado: 1.200,00 €. Sistema de amortización francés.</li>
+                <li>48 MESES: Importe mínimo: 576 €. Ejemplo de financiación para un importe de 1.200,00 € en 48 meses. Primera cuota de 33,39 €. 46 cuotas de 33,39 € y una última cuota de 33,44 €. TIN 14,99% TAE 16,06%. Total intereses: 402,77 €. Coste total del crédito: 402,77 €. Importe total adeudado y precio total a plazos: 1.602,77 €. Precio de adquisición al contado: 1.200,00 €. Sistema de amortización francés.</li>
+            </ul>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Pago aplazado con tarjeta - Aplazame</h2>
+            <p>Financiación a plazos con tarjeta. Puedes financiar cualquier importe hasta un máximo de 4.000 € y elegir pagarlo entre 3 y 36 meses. Para solicitar la financiación es necesario que tengas un DNI o NIE válido, un teléfono móvil y la tarjeta bancaria. El pedido tiene que tener dirección de entrega en España. La financiación tiene un coste TAE del 17,95 %. Pagas una entrada inicial en el momento de la compra y el resto se reparte entre las cuotas seleccionadas.</p>
+            <p>Durante el proceso de financiación únicamente tienes que indicar el número de meses en los que quieres pagar y el día en que deseas hacerlo. Se muestran los gastos (intereses de la financiación) durante la solicitud y la financiación será confirmada en pocos segundos.</p>
+            <p>Durante la solicitud de la financiación, se puede seleccionar qué día quieres pagar tus cuotas, entre el 1 al 28 de cada mes.</p>
+            <p><strong>Atención al cliente de Aplázame en el email: <a href="mailto:hola@aplazame.com">hola@aplazame.com</a></strong></p>
+            <h5>¿Quién puede Financiar?</h5>
+            <p>Cualquier particular con DNI español o NIE puede usar Aplázame. Solo hay que seleccionar la opción de Pago a plazos con tarjeta, como método de pago en Electro Gamer y completar algunos datos personales en la solicitud, para obtener respuesta al instante. Para ello, necesitarás un móvil, una tarjeta bancaria y un DNI o NIE válido.</p>
+            <h5>Conceptos debes conocer a la hora de financiar una compra con Aplazame en Electro Gamer:</h5>
+            <ul>
+                <li><strong>La entrada:</strong> es el pago inicial que realiza el cliente en el momento en que solicita un crédito con Aplazame. Esto permite comprobar la identidad y validar la tarjeta a la que se está asociando la financiación. Es importante recalcar que este cobro se descuenta del importe total del crédito y no se tiene en cuenta para el cálculo de los intereses.</li>
+                <li><strong>El préstamo:</strong> es el importe del carrito para el que solicita la financiación, al que restamos la entrada inicial. Sobre esta cantidad prestada se calcula el importe de cada cuota, que variará según el número de mensualidades.</li>
+                <li><strong>La T.A.E (Tasa Anual Equivalente):</strong> son los intereses que se le cobrarán en cada cuota del préstamo. Esta cantidad, se muestra de manera totalmente transparente en el proceso de solicitud, es el único coste para financiar la compra.</li>
+            </ul>
+            <p>Todas las solicitudes de financiación deben cumplir con los requisitos exigidos por el departamento de riesgos de Aplazame para ser aprobadas. La financiera examina la solicitud en tiempo real y da una respuesta inmediata. Si la solicitud no es aceptada, se informará al cliente en el mismo momento con un mensaje en pantalla y facilitamos volver a la página de pago para finalizar su compra, con otro de los métodos de pago disponibles en Electro Gamer.</p>
+            <h5>Acceso al Área de Cliente de Aplazame:</h5>
+            <ul>
+                <li><strong>Entra a tu área de cliente:</strong> <a href="https://aplazame.com" target="_blank">https://aplazame.com</a>, y clica en el botón “Entrar”, en la esquina superior derecha de la web, para loguearse. Necesitas el número de DNI y tener a mano el móvil para introducir el PIN de un solo uso que Aplazame envía por SMS, para validar la identidad.</li>
+                <li><strong>Consultar el estado de la financiación:</strong> después de acceder a tu área de cliente, aparece la información correspondiente a la financiación que tengas en ese momento.</li>
+            </ul>
+            <h5>Cancelación total de la compra:</h5>
+            <p>Se puede cancelar una compra financiada con Aplazame, ya sea porque el pedido sea eliminado, rechazado o devuelto.</p>
+            <p>Una vez tramitado desde Electro Gamer, desde Aplázame se reembolsa a la tarjeta del cliente todo lo que se le ha cobrado hasta el momento de la cancelación de la financiación: entrada, comisión y cuotas.</p>
+            <h5>Cancelación parcial de la compra:</h5>
+            <p>Se puede realizar la devolución parcial de artículos de pedidos financiados por Aplazame. Una vez tramitado desde Electro Gamer, desde Aplazame se hará un recálculo del crédito. Es decir, se actualizará el importe total del crédito que te quede tras dicha devolución y se recalculará el importe de las futuras cuotas pendientes de cobro. Por tanto, no realizaremos una devolución directa, sino que, reajustaremos las cuotas futuras en base a la nueva cantidad del crédito pendiente, tras restar el importe de la devolución.</p>
+            <h5>Otras características que ofrece la financiación de Aplazame:</h5>
+            <ul>
+                <li><strong>Adelantar el pago de la financiación:</strong> Si el cliente lo desea, en cualquier momento puede pagar el resto de cuotas que tenga pendientes de un crédito. Solo tiene que entrar en su panel de cliente, para hacerlo en la web de Aplazame.</li>
+                <li><strong>Cambiar la fecha de pago de las cuotas:</strong> Puedes cambiar el día de cobro de la cuota indicado en el proceso de financiación. Solo tienes que ponerte en contacto con el equipo de Atención al cliente de Aplazame, en el email <a href="mailto:hola@aplazame.com">hola@aplazame.com</a></li>
+                <li><strong>Cambiar la tarjeta bancaria en la que se cobran las cuotas mensualmente:</strong> El cliente tiene que entrar en su panel de cliente en la web de Aplazame y desde el apartado de “Preferencias” añadir los datos de la nueva tarjeta bancaria, en la que quiere que hagan los cargos.</li>
+                <li><strong>Recordatorios relacionados con el pago de las cuotas:</strong> Se envían recordatorios por email o al teléfono móvil del cliente, en estos casos, unos días antes del próximo cobro de la cuota correspondiente, como aviso del próximo cargo a recibir. Para pedir el cambio de tarjeta bancaria en caso de que caduque durante la duración de la financiación, informar sobre el estado de las cancelaciones o devoluciones y si ha ocurrido algún problema en el cobro de la cuota.</li>
+            </ul>
+            <p><em>Esta forma de pago está deshabilitada para pedido con la opción "recoger en tienda".</em></p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Financiación con ONEY (pedidos de tiendas de nuestro Marketplace)</h2>
+            <p>Esta forma de pago solo está disponible para pedidos de vendedores externos de nuestro Marketplace.</p>
+            <p>Con ONEY puedes pagar tu compra en 3, 4, 6 y 10 plazos con tu tarjeta, desde 100 € hasta 2.500 € (cuota mínima a pagar 20 €, los plazos e importes mínimos y máximos ofrecidos pueden variar en función del comercio).</p>
+            <p>Todos los pagos se realizarán periódicamente sobre tu tarjeta. Ten en cuenta que el primer pago se efectuará en el momento de la compra. Válido para tarjetas VISA o Mastercard, de débito o crédito, con una fecha de validez superior a la duración de la modalidad de financiación seleccionada. Por ejemplo, si solicitas una financiación a seis meses, la fecha de caducidad de tu tarjeta no podrá ser inferior a seis meses. No admitimos tarjetas prepago, virtuales ni American Express. Tienes más información sobre 3x 4x Oney <a href="https://www.pccomponentes.com/financiacion" target="_blank">aquí</a>.</p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Contra reembolso</h2>
+            <p>Esta modalidad de pago permanece inactiva por cuestiones de seguridad e higiene.</p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="section-title">Metálico o tarjeta en tienda</h2>
+            <p>Puedes hacer tus pagos en tienda con tarjeta de crédito/débito o en metálico. En efectivo, el importe no puede superar los 1000 €.</p>
+        </div>
+    </div>
+{% endblock %}

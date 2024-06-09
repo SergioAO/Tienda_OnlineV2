@@ -42,6 +42,8 @@ class RegistroController extends AbstractController
                 $plaintextPassword
             );
 
+
+
             $user->setPassword($hashedPassword);
 
             $nombre = $form->get('nombre')->getData();

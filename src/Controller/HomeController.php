@@ -66,4 +66,30 @@ class HomeController extends AbstractController
             'producto' => $producto
         ]);
     }
+
+
+    #[Route('/productos/categoria/{categoria}', name: 'productos_categoria', methods: ['GET'])]
+    public function productosCategoria(string $categoria, ProductoRepository $productoRepository): Response
+    {
+        // Usar el método findByCategoria del repositorio para obtener los productos
+        $productos = $productoRepository->findByCategoria($categoria);
+
+        return $this->render('parciales/productos_filtrados.html.twig', [
+            'products' => $productos,
+            'filterName' => ucfirst($categoria), // Capitalizamos la primera letra para la presentación
+        ]);
+    }
+
+    #[Route('/productos/marca/{marca}', name: 'productos_por_marca', methods: ['GET'])]
+    public function productosPorMarca(string $marca, ProductoRepository $productoRepository): Response
+    {
+        // Usar el método findByMarca del repositorio para obtener los productos
+        $productos = $productoRepository->findByMarca($marca);
+
+        return $this->render('parciales/productos_filtrados.html.twig', [
+            'products' => $productos,
+            'filterName' => ucfirst($marca), // Capitalizamos la primera letra para la presentación
+        ]);
+    }
+
 }
