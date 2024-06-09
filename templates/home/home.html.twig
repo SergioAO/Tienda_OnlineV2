@@ -2,41 +2,44 @@
 {% extends 'base.html.twig' %}
 
 {% block head %}
-
+	<script>
+		const ruta_producto_categoria = "{{ path('productos_por_categoria', { 'categoria': '_' }) }}"
+	</script>
+	<script src="{{asset("js/categoria.js")}}" defer></script>
 {% endblock %}
 {% block body %}
-    <div class="container">
-        <ul class="nav nav-tabs" id="categoryTab" role="tablist">
-            {% for categoria in categorias %}
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link {% if loop.first %}active{% endif %}" id="tab-{{ categoria.categoria }}" data-bs-toggle="tab" data-bs-target="#content-{{ categoria.categoria }}" type="button" role="tab" aria-controls="content-{{ categoria.categoria }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">{{ categoria.categoria }}</button>
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="tab-content" id="categoryTabContent">
-            {% for categoria in categorias %}
-                <div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ categoria.categoria }}" role="tabpanel" aria-labelledby="tab-{{ categoria.categoria }}">
-                    <div id="products" class="product-list">
-                        {% for producto in productos %}
-                            <div class="product-card">
-                                <img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
-                                <h3>{{ producto.nombre }}</h3>
-                                <p class="price">
-                                    <span class="current-price">{{ producto.precio }}€</span>
-                                </p>
-                                <button class="add-to-cart">Añadir al carrito</button>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
+	<div class="container">
+		<ul class="nav nav-tabs" id="categoryTab" role="tablist">
+			{% for categoria in categorias %}
+				<li class="nav-item" role="presentation">
+					<button data-categoria="{{categoria.categoria}}" class="categorias-btn nav-link {% if loop.first %}active{% endif %}" id="tab-{{ categoria.categoria }}" data-bs-toggle="tab" data-bs-target="#content-{{ categoria.categoria }}" type="button" role="tab" aria-controls="content-{{ categoria.categoria }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">{{ categoria.categoria }}</button>
+				</li>
+			{% endfor %}
+		</ul>
+		<div class="tab-content" id="categoryTabContent">
+			{% for categoria in categorias %}
+				<div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ categoria.categoria }}" role="tabpanel" aria-labelledby="tab-{{ categoria.categoria }}">
+					<div id="products" class="product-list">
+						{% for producto in productos %}
+							<div class="product-card">
+								<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
+								<h3>{{ producto.nombre }}</h3>
+								<p class="price">
+									<span class="current-price">{{ producto.precio }}€</span>
+								</p>
+								<button class="add-to-cart" data-id="{{producto.id}}" data-nombre="{{producto.nombre}}" data-precio="{{producto.precio}}">Añadir al carrito</button>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+	{{ encore_entry_script_tags('app') }}
 {% endblock %}
 
 

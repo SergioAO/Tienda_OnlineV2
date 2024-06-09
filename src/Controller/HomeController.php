@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Producto;
+use App\Repository\ProductoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class HomeController extends AbstractController
 {
@@ -65,6 +68,75 @@ class HomeController extends AbstractController
         return $this->render('home/producto.html.twig', [
             'producto' => $producto
         ]);
+    }
+
+    #[Route('/categorias', name: 'categorias', methods: ['GET'])]
+    public function categorias(): Response
+    {
+        $categorias = $this->entityManager->createQueryBuilder()
+            ->select('DISTINCT p.categoria')
+            ->from(Producto::class, 'p')
+            ->getQuery()
+            ->getResult();
+        // Devolver la respuesta JSON
+        return $this->json($categorias);
+    }
+    #[Route('/marcas', name: 'marcas', methods: ['GET'])]
+    public function marcas(): Response
+    {
+        $marcas = $this->entityManager->createQueryBuilder()
+            ->select('DISTINCT p.marca')
+            ->from(Producto::class, 'p')
+            ->getQuery()
+            ->getResult();
+        // Devolver la respuesta JSON
+        return $this->json($marcas);
+    }
+
+    #[Route('/carrito', name: 'carrito', methods: ['GET'])]
+    public function carrito(SessionInterface $session): Response
+    {
+        if (!$session->has('carrito')) {
+            $session->set('carrito', []);
+        }
+
+        return $this->json($session->get('carrito'));
+    }
+
+    #[Route('/carrito_agregar', name: 'carrito_agregar', methods: ['POST'])]
+    public function carrito_agregar(Request $request, SessionInterface $session): Response
+    {
+        if (!$session->has('carrito')) {
+            $session->set('carrito', []);
+        }
+
+        $producto = [
+            'id' => $request->request->get('id'),
+            'nombre' => $request->request->get('nombre'),
+            'precio' => $request->request->get('precio'),
+        ];
+
+        // Add the product to the cart
+        $carrito = $session->get('carrito');
+        $carrito[] = $producto;
+        $session->set('carrito', $carrito);
+
+        return $this->json($carrito);
+    }
+
+    #[Route('/carrito_eliminar', name: 'carrito_eliminar', methods: ['POST'])]
+    public function carrito_eliminar(Request $request, SessionInterface $session): Response
+    {
+        $id = $request->request->get('id');
+        $carrito = $session->get('carrito');
+        for ($i = 0; $i < count($carrito); $i++) {
+            if ($carrito[$i]['id'] == $id) {
+                array_splice($carrito, $i, 1);
+                break;
+            }
+        }
+        $session->set('carrito', $carrito);
+        return $this->json($carrito);
     }
 
 

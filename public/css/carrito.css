@@ -1,0 +1,11 @@
+.producto-en-carrito{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.eliminar-producto-carrito{
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    color: black;
+    background-color: red;
+}
