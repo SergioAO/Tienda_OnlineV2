@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin
+{% endblock %}
+{% block head %}
+<script>
+	const ruta_buscador_producto = "{{path('buscarProducto')}}";
+	const ruta_buscador_usuario = "{{path('buscarUsuario')}}";
+	const ruta_eliminar_usuario = "{{path('eliminarUsuario')}}";
+	const ruta_eliminar_productos = "{{path('eliminarProducto')}}";
+</script>
+	<script src="{{asset("js/administracion.js")}}" defer></script>
+	<link rel="stylesheet" href="{{ asset('css/administracion.css') }}">
+{% endblock %}
+{% block body %}
+
+	<div>
+		<button class="productos-agregar">Agregar Producto</button>
+		<button class="productos-eliminar">Eliminar Producto</button>
+		<button class="usuario-eliminar">Eliminar Usuario</button>
+	</div>
+	<div class="container_productos_agregar">
+		<form action="{{path('nuevoProducto')}}" enctype='multipart/form-data' method='post'>
+			<div>
+				<div>Nombre</div>
+				<input type="text" name="nombre" id="">
+			</div>
+			<div>
+				<div>Descripcion</div>
+				<input type="text" name="descripcion" id="">
+			</div>
+			<div>
+				<div>Precio</div>
+				<input type="number" name="precio" id="">
+			</div>
+			<div>
+				<div>Categoria</div>
+				<select name="categoria" id="">
+					{% for item in categorias %}
+						<option value="{{item.categoria}}">{{item.categoria}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div>
+				<div>Marca</div>
+				<select name="marca" id="">
+					<option value="">Elegir</option>
+					{% for item in marcas %}
+						<option value="{{item.marca}}">{{item.marca}}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div>
+				<div>Color</div>
+				<input type="text" name="color" id="">
+			</div>
+			<div>
+				<div>Stock</div>
+				<input type="number" name="stock" id="">
+			</div>
+			<div>
+				<div>Foto</div>
+				<input type="file" name="foto" id="">
+			</div>
+			<img src="#" alt="" class="img-producto">
+			<button>Enviar</button>
+		</form>
+	</div>
+	<div class="container_productos_eliminar" style="display: none">
+		<div>
+			Eliminar Producto
+			<input type="text" name="" id="buscador-producto">
+		</div>
+		<div class="container_productos">
+			<div>
+				<img src="" alt="foto">
+				<div>Producto</div>
+				<div>Categoria</div>
+				<button>Eliminar</button>
+			</div>
+		</div>
+	</div>
+	<div class="container_usuarios" style="display: none">
+		<div>
+			Eliminar Usuario
+			<input type="text" name="" id="buscador-usuario">
+		</div>
+		<div class="container_users">
+			<div>
+				<img src="" alt="foto">
+				<div>Correo</div>
+				<button>Eliminar</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
