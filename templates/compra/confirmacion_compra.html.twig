@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmación de Compra{% endblock %}
+
+{% block head %}
+    <script>
+        const ruta_limpiar_carrito = "{{ path('limpiar_carrito') }}"
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Hacer una petición AJAX para limpiar el carrito
+            $.ajax({
+                url: ruta_limpiar_carrito,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(response) {
+                    console.log('Carrito limpiado:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al limpiar el carrito:', error);
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h2>¡Compra realizada con éxito!</h2>
+        <p>Gracias por tu compra. A continuación, se muestran los detalles de tu pedido:</p>
+
+        <div class="card mt-4">
+            <div class="card-header">
+                <h3>Detalles del Pedido</h3>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for producto in carrito %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ producto.nombre }}</span>
+                                <span>{{ producto.cantidad }} x {{ producto.precio | number_format(2, ',', '.') }} €</span>
+                            </div>
+                            <div class="mt-1">
+                                <small class="text-muted">Precio total: {{ (producto.precio * producto.cantidad) | number_format(2, ',', '.') }} €</small>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer">
+                <h4>Total: {{ precioTotal * 1.21 | number_format(2, ',', '.') }} €</h4>
+            </div>
+        </div>
+
+        <a href="{{ path('home') }}" class="btn btn-primary mt-4">Volver a la Página Principal</a>
+    </div>
+{% endblock %}

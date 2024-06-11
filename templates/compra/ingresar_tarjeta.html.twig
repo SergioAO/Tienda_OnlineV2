@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="my-4">Formulario de Datos de Pago</h1>
+
+    <div class="card">
+        <div class="card-body">
+            {{ form_start(form, {'action': path('guardar_datos_tarjeta'), 'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+            <div class="form-group">
+                {{ form_label(form.numeroTarjeta, 'Número de Tarjeta', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.numeroTarjeta, {'attr': {'class': 'form-control', 'placeholder': 'Introduce tu número de tarjeta'}}) }}
+                {{ form_errors(form.numeroTarjeta, {'attr': {'class': 'invalid-feedback'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.titularNombre, 'Nombre del Titular', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.titularNombre, {'attr': {'class': 'form-control', 'placeholder': 'Introduce el nombre del titular'}}) }}
+                {{ form_errors(form.titularNombre, {'attr': {'class': 'invalid-feedback'}}) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.codigoDeSeguridad, 'Código de Seguridad', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.codigoDeSeguridad, {'attr': {'class': 'form-control', 'placeholder': 'Introduce el código de seguridad'}}) }}
+                {{ form_errors(form.codigoDeSeguridad, {'attr': {'class': 'invalid-feedback'}}) }}
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\DatoDePago;
 use App\Entity\Producto;
-use App\Entity\Usuario;
+use App\Form\DatoPagoFormType;
 use App\Repository\ProductoRepository;
 use App\Repository\UsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -399,7 +399,7 @@ class HomeController extends AbstractController
     public function mostrarFormularioDireccion(): Response
     {
         $form = $this->createForm(DireccionFormType::class);
-        return $this->render('direccion/ingresar_direccion.html.twig', [
+        return $this->render('compra/ingresar_direccion.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -407,51 +407,35 @@ class HomeController extends AbstractController
     #[Route('/guardar_direccion', name: 'guardar_direccion', methods: ['POST'])]
     public function guardarDireccion(Request $request): Response
     {
+        // Obtener los datos enviados en formato JSON
+        $data = json_decode($request->getContent(), true);
 
-        //dd($usuario);
-        $form = $this->createForm(DireccionFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            // Construir la dirección completa
-            $direccionCompleta = sprintf(
-                '%s %s, %s, %s, %s',
-                $data['tipo_via'],
-                $data['direccion'],
-                $data['provincia'],
-                $data['comunidad'],
-                $data['codigo_postal']
-            );
-
-            // Obtener el usuario actual
-            $userInterface = $this->getUser();
-            $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
-
-            if ($usuario) {
-                // Crear un nuevo DatoDePago (o actualizar uno existente)
-
-                $datoDePago = new DatoDePago();
-                $datoDePago->setDireccionFacturacion($direccionCompleta);
-                $datoDePago->setUsuario($usuario);
-
-                // Guardar en la base de datos
-                $this->entityManager->persist($datoDePago);
-                $this->entityManager->flush();
-
-                // Redireccionar a la página de éxito
-                return $this->redirectToRoute('home');
-            } else {
-                // Manejar el caso en que el usuario no esté autenticado
-                return $this->redirectToRoute('app_login');
-            }
+        // Verificar que los datos son válidos
+        if ($data === null || !isset($data['fullData'])) {
+            return new JsonResponse(['success' => false, 'errors' => ['Invalid data received.']], Response::HTTP_BAD_REQUEST);
         }
 
-        // Si hay errores, renderizar el formulario nuevamente con errores
-        return $this->render('direccion/ingresar_direccion.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        // Extraer la cadena de texto completa
+        $direccionCompleta = $data['fullData'];
+
+        // Obtener el usuario actual
+        $userInterface = $this->getUser();
+        $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
+
+        if ($usuario) {
+            // Crear un nuevo DatoDePago (o actualizar uno existente)
+            $datoDePago = new DatoDePago();
+            $datoDePago->setDireccionFacturacion($direccionCompleta);
+            $datoDePago->setUsuario($usuario);
+
+            // Guardar en la base de datos
+            $this->entityManager->persist($datoDePago);
+            $this->entityManager->flush();
+
+            return new JsonResponse(['success' => true, 'redirect_url' => $this->generateUrl('ingresar_tarjeta')]);
+        } else {
+            return new JsonResponse(['success' => false, 'errors' => ['User not authenticated.']], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     #[Route('/provincias_por_comunidad/{comunidad}', name: 'provincias_por_comunidad', methods: ['GET'])]
@@ -525,5 +509,83 @@ class HomeController extends AbstractController
                 'Melilla'
             ]
         ];
+    }
+
+    #[Route('/ingresar_tarjeta', name: 'ingresar_tarjeta')]
+    public function mostrarFormularioTarjeta(): Response
+    {
+        $form = $this->createForm(DatoPagoFormType::class);
+        return $this->render('compra/ingresar_tarjeta.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/guardar_datos_tarjeta', name: 'guardar_datos_tarjeta', methods: ['POST'])]
+    public function guardarTarjeta(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Obtener el usuario actual
+        $userInterface = $this->getUser();
+        $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
+
+        // Buscar si ya existe un registro de DatoDePago para el usuario actual
+        $datoDePago = $entityManager->getRepository(DatoDePago::class)->findOneBy(['usuario' => $usuario]);
+
+        if (!$datoDePago) {
+            // Si no existe, crear un nuevo DatoDePago
+            $datoDePago = new DatoDePago();
+            $datoDePago->setUsuario($usuario);
+        }
+
+        // Crear y manejar el formulario
+        $form = $this->createForm(DatoPagoFormType::class, $datoDePago);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Actualizar o establecer los datos de pago con los nuevos valores del formulario
+            $entityManager->persist($datoDePago);
+            $entityManager->flush();
+
+            // Añadir un mensaje de éxito y redirigir a la página principal
+            $this->addFlash('success', 'Datos de pago guardados con éxito.');
+            return $this->redirectToRoute('confirmacion_compra');
+        }
+
+        // Si el formulario no es válido, renderizar el formulario con errores
+        return $this->render('compra/ingresar_tarjeta.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/confirmacion_compra', name: 'confirmacion_compra')]
+    public function confirmacionCompra(SessionInterface $session): Response
+    {
+        // Obtener los productos del carrito desde la sesión
+        $carrito = $session->get('carrito', []);
+
+        // Verificar si el carrito está vacío
+        if (empty($carrito)) {
+            // Si el carrito está vacío, redirigir a la página principal con un mensaje de advertencia
+            $this->addFlash('warning', 'No hay productos en tu carrito.');
+            return $this->redirectToRoute('home');
+        }
+
+        // Calcular el precio total del carrito
+        $precioTotal = array_reduce($carrito, function($total, $producto) {
+            return $total + ($producto['precio'] * $producto['cantidad']);
+        }, 0);
+
+        // Renderizar la vista de confirmación de compra
+        return $this->render('compra/confirmacion_compra.html.twig', [
+            'carrito' => $carrito,
+            'precioTotal' => $precioTotal
+        ]);
+    }
+
+    #[Route('/limpiar_carrito', name: 'limpiar_carrito', methods: ['POST'])]
+    public function limpiarCarrito(SessionInterface $session): Response
+    {
+        // Limpiar el carrito de la sesión
+        $session->remove('carrito');
+        return new JsonResponse(['success' => true]);
     }
 }

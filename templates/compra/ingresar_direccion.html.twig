@@ -12,7 +12,7 @@
 {% block body %}
     <div class="container my-5">
         <h2>Ingresar Dirección</h2>
-        {{ form_start(form, {'action': path('guardar_direccion'), 'method': 'POST'}) }}
+        {{ form_start(form, {'attr': {'id': 'direccionForm', 'class': 'needs-validation'}, 'action': path('guardar_direccion'), 'method': 'POST'}) }}
         <div class="mb-3">
             {{ form_label(form.tipo_via) }}
             {{ form_widget(form.tipo_via, {'attr': {'class': 'form-control'}}) }}

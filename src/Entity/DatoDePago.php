@@ -22,12 +22,12 @@ class DatoDePago
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $codigoDeSeguridad = null;
 
-    #[ORM\Column(type: 'string', length: 60, nullable: true)]
+    #[ORM\Column()]
     private ?string $direccionFacturacion = null;
 
     #[ORM\ManyToOne(inversedBy: 'datoDePago')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Usuario $usuario = null;
+    private Usuario $usuario;
 
     public function getId(): ?int
     {
