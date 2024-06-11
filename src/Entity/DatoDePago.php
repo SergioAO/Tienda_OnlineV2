@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 class DatoDePago
@@ -76,12 +77,12 @@ class DatoDePago
         return $this;
     }
 
-    public function getUsuario(): ?Usuario
+    public function getUsuario(): Usuario
     {
         return $this->usuario;
     }
 
-    public function setUsuario(?Usuario $usuario): self
+    public function setUsuario(Usuario $usuario): self
     {
         $this->usuario = $usuario;
         return $this;

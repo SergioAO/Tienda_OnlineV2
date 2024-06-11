@@ -44,20 +44,20 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Regex(pattern:"/^[\w]+\.(jpg|jpeg|png|webp)$/i", message:"Foto no válida")]
     private ?string $photo = null;
 
-    #[ORM\OneToMany(mappedBy: 'idUsuario', targetEntity: Pedido::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Pedido::class, mappedBy: 'idUsuario', orphanRemoval: true)]
     private Collection $pedidos;
 
-    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Pregunta::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Pregunta::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $preguntas;
 
-    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Respuesta::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Respuesta::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $respuestas;
 
-    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: DatoDePago::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: DatoDePago::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $datoDePago;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $isVerified = false;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $isVerified = 0;
 
     public function getId(): ?int
     {
@@ -69,7 +69,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -125,7 +125,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @param list<string> $roles
      */
-    public function setRoles(array $roles): static
+    public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
@@ -140,7 +140,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -279,12 +279,12 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    public function isVerified(): int
     {
         return $this->isVerified;
     }
 
-    public function setVerified(bool $isVerified): static
+    public function setVerified(int $isVerified): self
     {
         $this->isVerified = $isVerified;
 

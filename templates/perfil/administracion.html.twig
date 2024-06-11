@@ -1,96 +1,179 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin
-{% endblock %}
+{% block title %}Admin{% endblock %}
+
 {% block head %}
-<script>
-	const ruta_buscador_producto = "{{path('buscarProducto')}}";
-	const ruta_buscador_usuario = "{{path('buscarUsuario')}}";
-	const ruta_eliminar_usuario = "{{path('eliminarUsuario')}}";
-	const ruta_eliminar_productos = "{{path('eliminarProducto')}}";
-</script>
-	<script src="{{asset("js/administracion.js")}}" defer></script>
+	<script>
+		const ruta_buscador_producto = "{{ path('buscarProducto') }}";
+		const ruta_buscador_usuario = "{{ path('buscarUsuario') }}";
+		const ruta_eliminar_usuario = "{{ path('eliminarUsuario') }}";
+		const ruta_eliminar_productos = "{{ path('eliminarProducto') }}";
+	</script>
+	<script src="{{ asset('js/administracion.js') }}" defer></script>
 	<link rel="stylesheet" href="{{ asset('css/administracion.css') }}">
 {% endblock %}
-{% block body %}
 
-	<div>
-		<button class="productos-agregar">Agregar Producto</button>
-		<button class="productos-eliminar">Eliminar Producto</button>
-		<button class="usuario-eliminar">Eliminar Usuario</button>
-	</div>
-	<div class="container_productos_agregar">
-		<form action="{{path('nuevoProducto')}}" enctype='multipart/form-data' method='post'>
-			<div>
-				<div>Nombre</div>
-				<input type="text" name="nombre" id="">
+{% block body %}
+	<div class="d-flex justify-content-center align-items-center min-vh-100">
+		<div class="card" style="width: 700px;">
+			<div class="card-body">
+				<h1 class="card-title text-center mb-4">Administración</h1>
+
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+					<li class="nav-item" role="presentation">
+						<a class="nav-link active" id="agregar-tab" data-bs-toggle="tab" href="#agregar" role="tab" aria-controls="agregar" aria-selected="true">Agregar Producto</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" id="eliminar-producto-tab" data-bs-toggle="tab" href="#eliminar-producto" role="tab" aria-controls="eliminar-producto" aria-selected="false">Eliminar Producto</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" id="eliminar-usuario-tab" data-bs-toggle="tab" href="#eliminar-usuario" role="tab" aria-controls="eliminar-usuario" aria-selected="false">Eliminar Usuario</a>
+					</li>
+				</ul>
+
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<!-- Agregar Producto -->
+					<div class="tab-pane fade show active" id="agregar" role="tabpanel" aria-labelledby="agregar-tab">
+						<div class="container_productos_agregar">
+							<form action="{{ path('nuevoProducto') }}" enctype="multipart/form-data" method="post">
+								<div class="mb-3">
+									<label for="nombre" class="form-label">Nombre</label>
+									<input type="text" name="nombre" id="nombre" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label for="descripcion" class="form-label">Descripción</label>
+									<input type="text" name="descripcion" id="descripcion" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label for="precio" class="form-label">Precio</label>
+									<input type="number" name="precio" id="precio" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label for="categoria" class="form-label">Categoría</label>
+									<select name="categoria" id="categoria" class="form-select">
+										{% for item in categorias %}
+											<option value="{{ item.categoria }}">{{ item.categoria }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="mb-3">
+									<label for="marca" class="form-label">Marca</label>
+									<select name="marca" id="marca" class="form-select">
+										<option value="">Elegir</option>
+										{% for item in marcas %}
+											<option value="{{ item.marca }}">{{ item.marca }}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="mb-3">
+									<label for="color" class="form-label">Color</label>
+									<input type="text" name="color" id="color" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label for="stock" class="form-label">Stock</label>
+									<input type="number" name="stock" id="stock" class="form-control">
+								</div>
+								<div class="mb-3">
+									<label for="foto" class="form-label">Foto</label>
+									<input type="file" name="foto" id="foto" class="form-control">
+								</div>
+								<div class="d-grid">
+									<button type="submit" class="btn btn-primary btn-block">Enviar</button>
+								</div>
+							</form>
+						</div>
+					</div>
+
+					<!-- Eliminar Producto -->
+					<div class="tab-pane fade" id="eliminar-producto" role="tabpanel" aria-labelledby="eliminar-producto-tab">
+						<div class="container_productos_eliminar">
+							<div class="mb-3">
+								<label for="buscador-producto" class="form-label">Buscar Producto</label>
+								<input type="text" name="buscador-producto" id="buscador-producto" class="form-control">
+							</div>
+							<div class="container_productos">
+								<!-- Aquí se llenarán los productos para eliminar -->
+								<div class="mt-3">
+									<img src="" alt="foto" class="img-fluid">
+									<div>Producto</div>
+									<div>Categoria</div>
+									<button class="btn btn-danger">Eliminar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Eliminar Usuario -->
+					<div class="tab-pane fade" id="eliminar-usuario" role="tabpanel" aria-labelledby="eliminar-usuario-tab">
+						<div class="container_usuarios">
+							<div class="mb-3">
+								<label for="buscador-usuario" class="form-label">Buscar Usuario</label>
+								<input type="text" name="buscador-usuario" id="buscador-usuario" class="form-control">
+							</div>
+							<div class="container_users">
+								<!-- Aquí se llenarán los usuarios para eliminar -->
+								<div class="mt-3">
+									<img src="" alt="foto" class="img-fluid">
+									<div>Correo</div>
+									<button class="btn btn-danger">Eliminar</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-			<div>
-				<div>Descripcion</div>
-				<input type="text" name="descripcion" id="">
-			</div>
-			<div>
-				<div>Precio</div>
-				<input type="number" name="precio" id="">
-			</div>
-			<div>
-				<div>Categoria</div>
-				<select name="categoria" id="">
-					{% for item in categorias %}
-						<option value="{{item.categoria}}">{{item.categoria}}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<div>
-				<div>Marca</div>
-				<select name="marca" id="">
-					<option value="">Elegir</option>
-					{% for item in marcas %}
-						<option value="{{item.marca}}">{{item.marca}}</option>
-					{% endfor %}
-				</select>
-			</div>
-			<div>
-				<div>Color</div>
-				<input type="text" name="color" id="">
-			</div>
-			<div>
-				<div>Stock</div>
-				<input type="number" name="stock" id="">
-			</div>
-			<div>
-				<div>Foto</div>
-				<input type="file" name="foto" id="">
-			</div>
-			<img src="#" alt="" class="img-producto">
-			<button>Enviar</button>
-		</form>
-	</div>
-	<div class="container_productos_eliminar" style="display: none">
-		<div>
-			Eliminar Producto
-			<input type="text" name="" id="buscador-producto">
 		</div>
-		<div class="container_productos">
-			<div>
-				<img src="" alt="foto">
-				<div>Producto</div>
-				<div>Categoria</div>
-				<button>Eliminar</button>
-			</div>
-		</div>
 	</div>
-	<div class="container_usuarios" style="display: none">
-		<div>
-			Eliminar Usuario
-			<input type="text" name="" id="buscador-usuario">
-		</div>
-		<div class="container_users">
-			<div>
-				<img src="" alt="foto">
-				<div>Correo</div>
-				<button>Eliminar</button>
-			</div>
-		</div>
-	</div>
+
+	<br>
+	<br>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', (event) => {
+			// Check if there's a hash in the URL
+			let hash = window.location.hash;
+
+			if (hash) {
+				// Activate the corresponding tab based on the URL hash
+				let tab = document.querySelector(`.nav-link[href="${hash}"]`);
+				let tabContent = document.querySelector(hash);
+
+				if (tab && tabContent) {
+					// Deactivate all tabs and contents
+					document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
+					document.querySelectorAll('.tab-pane').forEach((pane) => {
+						pane.classList.remove('show', 'active');
+						pane.classList.add('fade');
+					});
+
+					// Activate the selected tab and content
+					tab.classList.add('active');
+					tabContent.classList.add('show', 'active');
+				}
+			}
+
+			// Update the URL hash when a tab is clicked
+			document.querySelectorAll('.nav-link').forEach((link) => {
+				link.addEventListener('click', function (e) {
+					e.preventDefault();
+					let target = this.getAttribute('href');
+					if (history.pushState) {
+						history.pushState(null, null, target);
+					} else {
+						location.hash = target;
+					}
+
+					// Activate the selected tab and content
+					document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
+					document.querySelectorAll('.tab-pane').forEach((pane) => pane.classList.remove('show', 'active'));
+
+					this.classList.add('active');
+					let tabContent = document.querySelector(target);
+					tabContent.classList.add('show', 'active');
+				});
+			});
+		});
+	</script>
 {% endblock %}

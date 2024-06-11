@@ -2,6 +2,7 @@
 
 {% block title %}Productos - {{ filterName }}{% endblock %}
 
+
 {% block body %}
     <div class="container mt-4">
         <h1 class="mb-4">Productos - {{ filterName }}</h1>
@@ -20,7 +21,7 @@
                                     <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
                                 {% endif %}
                             </div>
-                            <div class="card-footer">
+                            <div class="add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}"  data-precio="{{ producto.precio }}" data-imagen="{{producto.imagen}}">
                                 <button class="btn btn-primary w-100">Añadir al carrito</button>
                             </div>
                         </div>

@@ -1,33 +1,219 @@
+/* Estilos básicos para el sidebar */
 .sidebar {
   height: 100%;
   width: 0;
   position: fixed;
+  z-index: 1000;
   top: 0;
   right: 0;
-  background-color: #ffffff;
+  background-color: #f8f9fa; /* Color de fondo de Bootstrap */
   overflow-x: hidden;
   transition: 0.5s;
   padding-top: 60px;
+  border-right: 1px solid #ddd; /* Borde para separar del contenido principal */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
 }
+
+/* Estilos para los enlaces del sidebar */
 .sidebar a {
-  padding: 10px 15px;
+  padding: 10px 15px; /* Espaciado */
   text-decoration: none;
-  font-size: 18px;
-  color: #818181;
+  font-size: 18px; /* Tamaño de fuente */
+  color: #343a40; /* Color del texto de Bootstrap */
   display: block;
   transition: 0.3s;
 }
+
+/* Efecto hover para enlaces */
 .sidebar a:hover {
-  color: #f1f1f1;
+  background-color: #e9ecef; /* Color de fondo al pasar el ratón */
+  color: #007bff; /* Color del texto al pasar el ratón */
 }
-.openbtn {
-  font-size: 20px;
-  cursor: pointer;
-  background-color: #333;
-  color: white;
+
+/* Estilos para el botón de cerrar el sidebar */
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  color: #343a40;
+}
+
+/* Estilos específicos para la sección de marcas */
+.sidebar .search-box {
+  padding: 10px 15px; /* Espaciado alrededor del input */
+}
+
+.sidebar .search-box input {
+  width: 100%; /* Ancho completo */
+  padding: 10px; /* Espaciado interno */
+  border: 1px solid #ddd; /* Borde */
+  border-radius: 4px; /* Bordes redondeados */
+}
+
+/* Mejora para las listas dentro del sidebar */
+.sidebar ul {
+  list-style-type: none; /* Quitar estilo de lista predeterminado */
+  padding: 0; /* Quitar padding */
+}
+
+.sidebar li {
+  padding: 10px 15px; /* Espaciado */
+  border-bottom: 1px solid #ddd; /* Línea divisoria entre elementos */
+}
+
+.sidebar li a {
+  color: #007bff; /* Color de enlace de Bootstrap */
+}
+
+.sidebar li a:hover {
+  color: #0056b3; /* Color de enlace en hover de Bootstrap */
+}
+
+/* Estilos para los encabezados de las secciones del sidebar */
+.sidebar h3 {
+  margin-top: 20px; /* Espaciado superior */
+  margin-bottom: 10px; /* Espaciado inferior */
+  font-size: 20px; /* Tamaño de fuente */
+  font-weight: bold; /* Negrita */
+  padding: 0 15px; /* Espaciado lateral */
+  color: #343a40; /* Color del texto */
+}
+
+/* Estilos para las subcategorías (si se usan) */
+.subcategorias {
+  padding-left: 20px; /* Indentar subcategorías */
+  display: none; /* Ocultar subcategorías por defecto */
+}
+
+.subcategorias li {
+  padding: 5px 0; /* Espaciado interno */
+  border: none; /* Quitar bordes adicionales */
+}
+
+.subcategorias li a {
+  font-size: 16px; /* Tamaño de fuente más pequeño para subcategorías */
+  color: #6c757d; /* Color de texto de Bootstrap para subcategorías */
+}
+
+.subcategorias li a:hover {
+  color: #007bff; /* Color de texto al pasar el ratón */
+}
+
+/* Estilo para la categoría activa */
+.categoria-nombre.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+
+
+.sidebar-izq{
+  left: 0;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.carrito-compra {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.producto-en-carrito {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin: 10px;
+}
+
+.producto-en-carrito img {
+  width: 50px;
+  height: auto;
+  margin-right: 15px;
+}
+
+.producto-en-carrito .detalle {
+  flex-grow: 1;
+}
+
+.producto-en-carrito .precio,
+.producto-en-carrito .cantidad,
+.producto-en-carrito .subtotal {
+  font-weight: bold;
+}
+
+.producto-en-carrito button {
+  background: none;
   border: none;
-  padding: 10px 15px;
+  color: red;
+  cursor: pointer;
 }
-.openbtn:hover {
-  background-color: #444;
+
+.carrito-total {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.carrito-total span {
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+.carrito-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.carrito-footer button {
+  background-color: #f60;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.carrito-footer button:hover {
+  background-color: #d44;
+}
+
+.offcanvas-body {
+  padding: 1rem;
+}
+
+.offcanvas-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.list-group-item {
+  border: none; /* Quitar los bordes */
+  padding: 10px 15px; /* Espaciado */
+  background-color: transparent; /* Fondo transparente */
+  font-size: 1rem; /* Tamaño de la fuente */
+  color: #333; /* Color del texto */
+}
+
+.list-group-item:hover {
+  background-color: #f0f0f0; /* Efecto hover */
+  cursor: pointer; /* Cursor de puntero */
+}
+
+h3 {
+  margin-top: 20px; /* Espaciado entre secciones */
+  font-size: 1.2rem; /* Tamaño de la fuente */
+  font-weight: bold;
 }

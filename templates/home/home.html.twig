@@ -4,8 +4,10 @@
 {% block head %}
 	<script>
 		const ruta_producto_categoria = "{{ path('productos_por_categoria', { 'categoria': '_' }) }}"
+		const ruta_producto_marca = "{{ path('productos_por_marca', { 'marca': '_' }) }}"
 	</script>
 	<script src="{{asset("js/categoria.js")}}" defer></script>
+	<script src="{{asset("js/marca.js")}}" defer></script>
 {% endblock %}
 {% block body %}
 	<div class="container">
@@ -27,7 +29,7 @@
 								<p class="price">
 									<span class="current-price">{{ producto.precio }}€</span>
 								</p>
-								<button class="add-to-cart" data-id="{{producto.id}}" data-nombre="{{producto.nombre}}" data-precio="{{producto.precio}}">Añadir al carrito</button>
+								<button class="add-to-cart" data-id="{{producto.id}}" data-nombre="{{producto.nombre}}" data-precio="{{producto.precio}}" data-imagen="{{producto.imagen}}">Añadir al carrito</button>
 							</div>
 						{% endfor %}
 					</div>
@@ -35,6 +37,40 @@
 			{% endfor %}
 		</div>
 	</div>
+
+	<br>
+	<br>
+
+	<div class="container">
+		<ul class="nav nav-tabs" id="marcaTab" role="tablist">
+			{% for marca in marcas %}
+				<li class="nav-item" role="presentation">
+					<button data-marca="{{marca.marca}}" class="marcas-btn nav-link {% if loop.first %}active{% endif %}" id="tab-{{ marca.marca }}" data-bs-toggle="tab" data-bs-target="#content-{{ marca.marca }}" type="button" role="tab" aria-controls="content-{{ marca.marca }}" aria-selected="{% if loop.first %}true{% else %}false{% endif %}">{{ marca.marca }}</button>
+				</li>
+			{% endfor %}
+		</ul>
+		<div class="tab-content" id="marcaTabContent">
+			{% for marca in marcas %}
+				<div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ marca.marca }}" role="tabpanel" aria-labelledby="tab-{{ marca.marca }}">
+					<div id="products-marca" class="product-list">
+						{% for producto_marca in productos_marca %}
+							<div class="product-card">
+								<img src="{{ asset(producto_marca.imagen) }}" alt="{{ producto_marca.nombre }}">
+								<h3>{{ producto_marca.nombre }}</h3>
+								<p class="price">
+									<span class="current-price">{{ producto_marca.precio }}€</span>
+								</p>
+								<button class="add-to-cart" data-id="{{producto_marca.id}}" data-nombre="{{producto_marca.nombre}}" data-precio="{{producto_marca.precio}}" data-imagen="{{producto_marca.imagen}}">Añadir al carrito</button>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<br>
+	<br>
 
 {% endblock %}
 

@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\DatoDePago;
 use App\Entity\Producto;
+use App\Entity\Usuario;
 use App\Repository\ProductoRepository;
 use App\Repository\UsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use App\Form\DireccionFormType;
 
 class HomeController extends AbstractController
 {
@@ -87,6 +91,28 @@ class HomeController extends AbstractController
         return $this->json($productosArray);
     }
 
+    #[Route('/producto/{marca}', name: 'productos_por_marca', methods: ['GET'])]
+    public function productosPorMarca(string $marca): Response
+    {
+        // Obtener los productos de la categoría seleccionada
+        $productos = $this->entityManager->getRepository(Producto::class)
+            ->findBy(['marca' => $marca]);
+
+        // Preparar la respuesta JSON con los productos
+        $productosArray = [];
+        foreach ($productos as $producto) {
+            $productosArray[] = [
+                'id' => $producto->getId(),
+                'nombre' => $producto->getNombre(),
+                'imagen' => $producto->getImagen(),
+                'precio' => $producto->getPrecio(),
+            ];
+        }
+
+        // Devolver la respuesta JSON
+        return $this->json($productosArray);
+    }
+
     #[Route('/producto/{id}', name: 'producto')]
     public function producto(EntityManagerInterface $em, int $id): Response
     {
@@ -136,15 +162,42 @@ class HomeController extends AbstractController
             $session->set('carrito', []);
         }
 
-        $producto = [
-            'id' => $request->request->get('id'),
-            'nombre' => $request->request->get('nombre'),
-            'precio' => $request->request->get('precio'),
-        ];
+        $id = $request->request->get('id');
+        $nombre = $request->request->get('nombre');
+        $precio = $request->request->get('precio');
 
-        // Add the product to the cart
+        // Obtener el carrito actual
         $carrito = $session->get('carrito');
-        $carrito[] = $producto;
+        $productoEncontrado = false;
+
+        // Verificar si el producto ya está en el carrito
+        foreach ($carrito as &$producto) {
+            if ($producto['id'] == $id) {
+                $productoEncontrado = true;
+                // Si no existe la propiedad 'cantidad', inicializarla
+                if (!isset($producto['cantidad'])) {
+                    $producto['cantidad'] = 0;
+                }
+                // Incrementar la cantidad y actualizar el precio total
+                $producto['cantidad']++;
+                $producto['precio'] = $precio * $producto['cantidad'];
+                break;
+            }
+        }
+
+        // Si el producto no está en el carrito, añadirlo con la propiedad 'cantidad'
+        if (!$productoEncontrado) {
+            $carrito[] = [
+                'id' => $id,
+                'imagen' => $request->request->get('imagen'),
+                'nombre' => $nombre,
+                'precio' => $precio,
+                'cantidad' => 1, // Inicializar la cantidad
+                'precio_total' => $precio
+            ];
+        }
+
+        // Guardar el carrito actualizado en la sesión
         $session->set('carrito', $carrito);
 
         return $this->json($carrito);
@@ -155,14 +208,47 @@ class HomeController extends AbstractController
     {
         $id = $request->request->get('id');
         $carrito = $session->get('carrito');
+        $precioTotal = 0;
+
         for ($i = 0; $i < count($carrito); $i++) {
             if ($carrito[$i]['id'] == $id) {
-                array_splice($carrito, $i, 1);
+                if ($carrito[$i]['cantidad'] > 1) {
+                    $carrito[$i]['cantidad']--;
+                    $carrito[$i]['precio'] = $carrito[$i]['precio'] / ($carrito[$i]['cantidad'] + 1) * $carrito[$i]['cantidad'];
+                } else {
+                    array_splice($carrito, $i, 1);
+                }
                 break;
             }
         }
+
+        foreach ($carrito as $producto) {
+            $precioTotal += $producto['precio'];
+        }
+
         $session->set('carrito', $carrito);
-        return $this->json($carrito);
+        return $this->json([
+            'carrito' => $carrito,
+            'precioTotal' => $precioTotal
+        ]);
+    }
+
+    #[Route('/ver_carrito', name: 'ver_carrito', methods: ['GET'])]
+    public function verCarrito(SessionInterface $session): Response
+    {
+        // Obtener los productos del carrito desde la sesión
+        $carrito = $session->get('carrito', []);
+
+        // Calcular el precio total del carrito
+        $precioTotal = array_reduce($carrito, function($total, $producto) {
+            return $total + ($producto['precio'] * $producto['cantidad']);
+        }, 0);
+
+        // Renderizar la vista del carrito
+        return $this->render('carrito/ver_carrito.html.twig', [
+            'carrito' => $carrito,
+            'precioTotal' => $precioTotal
+        ]);
     }
 
 
@@ -178,8 +264,8 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/productos/marca/{marca}', name: 'productos_por_marca', methods: ['GET'])]
-    public function productosPorMarca(string $marca, ProductoRepository $productoRepository): Response
+    #[Route('/productos/marca/{marca}', name: 'productos_marca', methods: ['GET'])]
+    public function productosMarca(string $marca, ProductoRepository $productoRepository): Response
     {
         // Usar el método findByMarca del repositorio para obtener los productos
         $productos = $productoRepository->findByMarca($marca);
@@ -307,5 +393,137 @@ class HomeController extends AbstractController
         $this->entityManager->remove($product);
         $this->entityManager->flush();
         return $this->json($product);
+    }
+
+    #[Route('/ingresar_direccion', name: 'ingresar_direccion')]
+    public function mostrarFormularioDireccion(): Response
+    {
+        $form = $this->createForm(DireccionFormType::class);
+        return $this->render('direccion/ingresar_direccion.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/guardar_direccion', name: 'guardar_direccion', methods: ['POST'])]
+    public function guardarDireccion(Request $request): Response
+    {
+
+        //dd($usuario);
+        $form = $this->createForm(DireccionFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            // Construir la dirección completa
+            $direccionCompleta = sprintf(
+                '%s %s, %s, %s, %s',
+                $data['tipo_via'],
+                $data['direccion'],
+                $data['provincia'],
+                $data['comunidad'],
+                $data['codigo_postal']
+            );
+
+            // Obtener el usuario actual
+            $userInterface = $this->getUser();
+            $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
+
+            if ($usuario) {
+                // Crear un nuevo DatoDePago (o actualizar uno existente)
+
+                $datoDePago = new DatoDePago();
+                $datoDePago->setDireccionFacturacion($direccionCompleta);
+                $datoDePago->setUsuario($usuario);
+
+                // Guardar en la base de datos
+                $this->entityManager->persist($datoDePago);
+                $this->entityManager->flush();
+
+                // Redireccionar a la página de éxito
+                return $this->redirectToRoute('home');
+            } else {
+                // Manejar el caso en que el usuario no esté autenticado
+                return $this->redirectToRoute('app_login');
+            }
+        }
+
+        // Si hay errores, renderizar el formulario nuevamente con errores
+        return $this->render('direccion/ingresar_direccion.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/provincias_por_comunidad/{comunidad}', name: 'provincias_por_comunidad', methods: ['GET'])]
+    public function provinciasPorComunidad(Request $request, $comunidad): JsonResponse
+    {
+        $provinciasPorComunidad = $this->getProvinciasPorComunidad();
+
+        $provincias = $provinciasPorComunidad[$comunidad] ?? [];
+
+        return $this->json($provincias);
+    }
+
+    private function getProvinciasPorComunidad(): array
+    {
+        return [
+            'Andalucía' => [
+                'Almería', 'Cádiz', 'Córdoba', 'Granada', 'Huelva', 'Jaén', 'Málaga', 'Sevilla'
+            ],
+            'Aragón' => [
+                'Huesca', 'Teruel', 'Zaragoza'
+            ],
+            'Asturias' => [
+                'Asturias'
+            ],
+            'Islas Baleares' => [
+                'Islas Baleares'
+            ],
+            'Canarias' => [
+                'Las Palmas', 'Santa Cruz de Tenerife'
+            ],
+            'Cantabria' => [
+                'Cantabria'
+            ],
+            'Castilla-La Mancha' => [
+                'Albacete', 'Ciudad Real', 'Cuenca', 'Guadalajara', 'Toledo'
+            ],
+            'Castilla y León' => [
+                'Ávila', 'Burgos', 'León', 'Palencia', 'Salamanca', 'Segovia', 'Soria', 'Valladolid', 'Zamora'
+            ],
+            'Cataluña' => [
+                'Barcelona', 'Girona', 'Lleida', 'Tarragona'
+            ],
+            'Extremadura' => [
+                'Badajoz', 'Cáceres'
+            ],
+            'Galicia' => [
+                'A Coruña', 'Lugo', 'Ourense', 'Pontevedra'
+            ],
+            'Madrid' => [
+                'Madrid'
+            ],
+            'Murcia' => [
+                'Murcia'
+            ],
+            'Navarra' => [
+                'Navarra'
+            ],
+            'País Vasco' => [
+                'Álava', 'Gipuzkoa', 'Bizkaia'
+            ],
+            'La Rioja' => [
+                'La Rioja'
+            ],
+            'Comunidad Valenciana' => [
+                'Alicante', 'Castellón', 'Valencia'
+            ],
+            'Ceuta' => [
+                'Ceuta'
+            ],
+            'Melilla' => [
+                'Melilla'
+            ]
+        ];
     }
 }

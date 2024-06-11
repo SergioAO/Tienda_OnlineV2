@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ingresar Dirección{% endblock %}
+
+{% block head %}
+    <script>
+        const ruta_provincias_comunidades = "{{ path('provincias_por_comunidad', { 'comunidad': '_' }) }}";
+    </script>
+    <script src="{{ asset("js/direccion.js") }}" defer></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h2>Ingresar Dirección</h2>
+        {{ form_start(form, {'action': path('guardar_direccion'), 'method': 'POST'}) }}
+        <div class="mb-3">
+            {{ form_label(form.tipo_via) }}
+            {{ form_widget(form.tipo_via, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.direccion) }}
+            {{ form_widget(form.direccion, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.comunidad) }}
+            {{ form_widget(form.comunidad, {'attr': {'class': 'form-control comunidad-select' }}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.provincia) }}
+            {{ form_widget(form.provincia, {'attr': {'class': 'form-control provincia-select' }}) }}
+        </div>
+        <div class="mb-3">
+            {{ form_label(form.codigo_postal) }}
+            {{ form_widget(form.codigo_postal, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div>
+            {{ form_widget(form.guardar, {'attr': {'class': 'btn btn-primary'}}) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

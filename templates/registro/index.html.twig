@@ -3,24 +3,59 @@
 {% block title %}Registro{% endblock %}
 
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card" style="width: 500px;">
+            <div class="card-body">
+                {% for flash_error in app.flashes('verify_email_error') %}
+                    <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+                {% endfor %}
 
-    <h1>Registro</h1>
+                <h1 class="card-title text-center">Registro</h1>
 
-    {{ form_errors(registroForm) }}
+                {{ form_start(registroForm) }}
 
-    {{ form_start(registroForm) }}
-    {{ form_row(registroForm.email) }}
-    {{ form_row(registroForm.nombre) }}
-    {{ form_row(registroForm.apellidos) }}
-    {{ form_row(registroForm.plainPassword, {
-        label: 'Password'
-    }) }}
-    {{ form_row(registroForm.photo) }}
-    {{ form_row(registroForm.agreeTerms) }}
+                <div class="form-group mb-3">
+                    {{ form_label(registroForm.email) }}
+                    {{ form_widget(registroForm.email, { 'attr': { 'class': 'form-control' } }) }}
+                    {{ form_errors(registroForm.email) }}
+                </div>
 
-    <button type="submit" class="btn">Registro</button>
-    {{ form_end(registroForm) }}
+                <div class="form-group mb-3">
+                    {{ form_label(registroForm.nombre) }}
+                    {{ form_widget(registroForm.nombre, { 'attr': { 'class': 'form-control' } }) }}
+                    {{ form_errors(registroForm.nombre) }}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form_label(registroForm.apellidos) }}
+                    {{ form_widget(registroForm.apellidos, { 'attr': { 'class': 'form-control' } }) }}
+                    {{ form_errors(registroForm.apellidos) }}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form_label(registroForm.plainPassword, 'Password') }}
+                    {{ form_widget(registroForm.plainPassword, { 'attr': { 'class': 'form-control' } }) }}
+                    {{ form_errors(registroForm.plainPassword) }}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form_label(registroForm.photo) }}
+                    {{ form_widget(registroForm.photo, { 'attr': { 'class': 'form-control' } }) }}
+                    {{ form_errors(registroForm.photo) }}
+                </div>
+
+                <div class="form-group mb-3">
+                    {{ form_widget(registroForm.agreeTerms, { 'attr': { 'class': 'form-check-input' } }) }}
+                    {{ form_label(registroForm.agreeTerms, null, { 'label_attr': { 'class': 'form-check-label' } }) }}
+                    {{ form_errors(registroForm.agreeTerms) }}
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-block">Registro</button>
+                </div>
+
+                {{ form_end(registroForm) }}
+            </div>
+        </div>
+    </div>
 {% endblock %}

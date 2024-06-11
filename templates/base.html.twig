@@ -14,10 +14,12 @@
 		<script language="javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script>
 			const ruta_categorias = "{{ path('categorias') }}"
-const ruta_marcas = "{{ path('marcas') }}"
-const ruta_carrito = "{{ path('carrito') }}"
-const ruta_carrito_agregar = "{{ path('carrito_agregar') }}"
-const ruta_carrito_eliminar = "{{ path('carrito_eliminar') }}"
+            const ruta_marcas = "{{ path('marcas') }}"
+            const ruta_carrito = "{{ path('carrito') }}"
+            const ruta_carrito_agregar = "{{ path('carrito_agregar') }}"
+            const ruta_carrito_eliminar = "{{ path('carrito_eliminar') }}"
+            const ruta_producto_mark = "{{ path('productos_marca', {'marca': '_'}) }}"
+            const ruta_producto_category = "{{ path('productos_categoria', {'categoria': '_'}) }}"
 		</script>
 		<script src="{{asset("js/base.js")}}" defer></script>
 		<script src="{{asset("js/carrito.js")}}" defer></script>
@@ -30,18 +32,22 @@ const ruta_carrito_eliminar = "{{ path('carrito_eliminar') }}"
 				{% include 'componentes/cabecera.html.twig' %}
 			{% endblock %}
 		</header>
-		<div id="miCategoria" class="sidebar">
-			<a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar('miCategoria')">×</a>
-			<h3>Categorias</h3>
-			<ul class="categorias"></ul>
-			<h3>Marcas</h3>
-			<ul class="marcas"></ul>
-		</div>
-		<div id="miCarrito" class="sidebar">
-			<a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar('miCarrito')">×</a>
-			<h3>Carrito</h3>
-			<ul class="carrito-compra"></ul>
-		</div>
+		<div id="miCategoria" class="sidebar sidebar-izq">
+            <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar('miCategoria')">×</a>
+            <h3>Categorias</h3>
+            <ul class="categorias"></ul>
+            <h3>Marcas</h3>
+            <ul class="marcas"></ul>
+        </div>
+        <div id="miCarrito" class="sidebar">
+            <a href="javascript:void(0)" class="closebtn" onclick="toggleSidebar('miCarrito')">×</a>
+            <h3>Mi carrito</h3>
+            <ul class="carrito-compra"></ul>
+            <div class="carrito-total"></div>
+            <div class="carrito-footer">
+                <button onclick="location.href='{{ path('ver_carrito') }}'">Ver artículos en tu carrito</button>
+            </div>
+        </div>
         <main role="main" class="container" style="margin-top: 80px;">
             {% block body %}{% endblock %}
         </main>

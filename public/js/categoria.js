@@ -5,6 +5,8 @@ const ruta_categoria = ruta_producto_categoria.substring(
 
 $(".categorias-btn").on("click", function () {
   console.log(ruta_categoria + $(this).data("categoria"));
+  $(".categorias-btn").removeClass("active");
+  $(this).addClass("active");
   solicitarProductos($(this).data("categoria"));
 });
 function solicitarProductos(categoria) {
@@ -18,6 +20,7 @@ function solicitarProductos(categoria) {
   });
 }
 function mostrarProductos(categoria, productos) {
+  console.log("Entrando en categoria");
   $("#categoryTabContent").empty();
   $("#categoryTabContent")
     .append(`<div class="tab-pane fade show active" id="content-${categoria}" role="tabpanel" aria-labelledby="tab-${categoria}">
