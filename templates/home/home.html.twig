@@ -1,4 +1,4 @@
-{#<!-- templates/home/home.html.twig -->#}
+{# templates/home/home.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block head %}
@@ -24,8 +24,10 @@
 					<div id="products" class="product-list">
 						{% for producto in productos %}
 							<div class="product-card">
-								<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
-								<h3>{{ producto.nombre }}</h3>
+								<a class="product-link" href="{{ path('producto_detalle', { 'id': producto.id }) }}">
+									<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
+									<h3>{{ producto.nombre }}</h3>
+								</a>
 								<p class="price">
 									<span class="current-price">{{ producto.precio }}€</span>
 								</p>
@@ -55,8 +57,10 @@
 					<div id="products-marca" class="product-list">
 						{% for producto_marca in productos_marca %}
 							<div class="product-card">
-								<img src="{{ asset(producto_marca.imagen) }}" alt="{{ producto_marca.nombre }}">
-								<h3>{{ producto_marca.nombre }}</h3>
+								<a class="product-link" href="{{ path('producto_detalle', { 'id': producto_marca.id }) }}">
+									<img src="{{ asset(producto_marca.imagen) }}" alt="{{ producto_marca.nombre }}">
+									<h3>{{ producto_marca.nombre }}</h3>
+								</a>
 								<p class="price">
 									<span class="current-price">{{ producto_marca.precio }}€</span>
 								</p>
@@ -69,13 +73,8 @@
 		</div>
 	</div>
 
-	<br>
-	<br>
-
 {% endblock %}
 
 {% block javascripts %}
 	{{ encore_entry_script_tags('app') }}
 {% endblock %}
-
-

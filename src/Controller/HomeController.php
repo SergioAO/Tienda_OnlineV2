@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Compra;
 use App\Entity\DatoDePago;
+use App\Entity\Pedido;
+use App\Entity\Pregunta;
 use App\Entity\Producto;
 use App\Form\DatoPagoFormType;
+use App\Form\PreguntaFormType;
 use App\Repository\ProductoRepository;
 use App\Repository\UsuarioRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -113,12 +117,46 @@ class HomeController extends AbstractController
         return $this->json($productosArray);
     }
 
-    #[Route('/producto/{id}', name: 'producto')]
-    public function producto(EntityManagerInterface $em, int $id): Response
+    #[Route('/producto/detalle/{id}', name: 'producto_detalle', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    public function producto(EntityManagerInterface $em, Request $request, int $id): Response
     {
+        // Obtener el producto
         $producto = $em->getRepository(Producto::class)->find($id);
+
+        if (!$producto) {
+            throw $this->createNotFoundException('El producto no existe');
+        }
+
+        // Obtener los comentarios (preguntas) relacionados con el producto
+        $preguntas = $em->getRepository(Pregunta::class)->findBy(['producto' => $producto], ['fecha' => 'DESC']);
+
+        // Crear el formulario para una nueva pregunta
+        $pregunta = new Pregunta();
+        $form = $this->createForm(PreguntaFormType::class, $pregunta);
+        $form->handleRequest($request);
+
+        // Procesar el formulario si es enviado
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->getUser()) {
+                $pregunta->setProducto($producto);
+                $pregunta->setUsuario($this->getUser());
+                $pregunta->setFecha(new \DateTime());
+
+                $em->persist($pregunta);
+                $em->flush();
+
+                // Redirigir para evitar reenvío del formulario al recargar
+                return $this->redirectToRoute('producto_detalle', ['id' => $producto->getId()]);
+            } else {
+                // Mensaje de error si el usuario no está autenticado
+                $this->addFlash('warning', 'Debes estar registrado para publicar comentarios.');
+            }
+        }
+
         return $this->render('home/producto.html.twig', [
-            'producto' => $producto
+            'producto' => $producto,
+            'preguntas' => $preguntas,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -337,7 +375,7 @@ class HomeController extends AbstractController
 
         $productos = $this->buscarProducto($parametro);
 
-        return $this->render('home/producto.html.twig', [
+        return $this->render('home/producto_buscado.html.twig', [
             'productos' => $productos
         ]);
     }
@@ -423,13 +461,21 @@ class HomeController extends AbstractController
         $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
 
         if ($usuario) {
-            // Crear un nuevo DatoDePago (o actualizar uno existente)
-            $datoDePago = new DatoDePago();
-            $datoDePago->setDireccionFacturacion($direccionCompleta);
-            $datoDePago->setUsuario($usuario);
+            // Buscar un DatoDePago existente para el usuario
+            $datoDePago = $this->entityManager->getRepository(DatoDePago::class)->findOneBy(['usuario' => $usuario]);
 
-            // Guardar en la base de datos
-            $this->entityManager->persist($datoDePago);
+            if ($datoDePago) {
+                // Si existe, actualizar la dirección de facturación
+                $datoDePago->setDireccionFacturacion($direccionCompleta);
+            } else {
+                // Si no existe, crear un nuevo DatoDePago
+                $datoDePago = new DatoDePago();
+                $datoDePago->setDireccionFacturacion($direccionCompleta);
+                $datoDePago->setUsuario($usuario);
+                $this->entityManager->persist($datoDePago);
+            }
+
+            // Guardar los cambios en la base de datos
             $this->entityManager->flush();
 
             return new JsonResponse(['success' => true, 'redirect_url' => $this->generateUrl('ingresar_tarjeta')]);
@@ -557,7 +603,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/confirmacion_compra', name: 'confirmacion_compra')]
-    public function confirmacionCompra(SessionInterface $session): Response
+    public function confirmacionCompra(SessionInterface $session, EntityManagerInterface $em): Response
     {
         // Obtener los productos del carrito desde la sesión
         $carrito = $session->get('carrito', []);
@@ -569,23 +615,82 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        // Calcular el precio total del carrito
-        $precioTotal = array_reduce($carrito, function($total, $producto) {
-            return $total + ($producto['precio'] * $producto['cantidad']);
-        }, 0);
+        $userInterface = $this->getUser();
+        $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
+
+        if (!$usuario) {
+            // Si no hay usuario logueado, redirigir a la página de inicio de sesión
+            $this->addFlash('warning', 'Debes iniciar sesión para confirmar tu compra.');
+            return $this->redirectToRoute('login');
+        }
+
+        // Obtener la dirección del usuario desde la entidad DatoDePago
+        $datoDePago = $em->getRepository(DatoDePago::class)->findOneBy(['usuario' => $usuario]);
+
+        if (!$datoDePago) {
+            // Si no se encuentra la dirección, mostrar un mensaje de error
+            $this->addFlash('warning', 'No se pudo encontrar la dirección de envío.');
+            return $this->redirectToRoute('home');
+        }
+
+        $direccion = $datoDePago->getDireccionFacturacion();
+        $fecha = new \DateTime();
+
+        // Crear una nueva instancia de Pedido
+        $pedido = new Pedido();
+        $pedido->setIdUsuario($usuario);
+        $pedido->setDireccion($direccion);
+        $pedido->setFecha($fecha);
+
+        $em->persist($pedido); // Persistir el Pedido primero para obtener el ID
+
+        // Guardar los productos del carrito como Compras
+        foreach ($carrito as $productoData) {
+            // Buscar la entidad Producto usando su ID
+            $producto = $em->getRepository(Producto::class)->find($productoData['id']);
+
+            if (!$producto) {
+                // Si no se encuentra el producto, mostrar un mensaje de error
+                $this->addFlash('warning', 'No se pudo encontrar el producto con ID: ' . $productoData['id']);
+                return $this->redirectToRoute('carrito');
+            }
+
+            $compra = new Compra();
+            $compra->setIdPedido($pedido);
+            $compra->setIdProducto($producto);
+            $compra->setUnidades($productoData['cantidad']);
+
+            // Convertir el precio de compra a un número flotante y guardarlo como string
+            $precioCompra = floatval($productoData['precio']) * floatval($productoData['cantidad']);
+            $compra->setPrecio_compra((string) $precioCompra);
+
+            $pedido->addCompra($compra);
+            $em->persist($compra);
+        }
+
+        // Guardar los cambios en la base de datos
+        $em->flush();
+
+        // Limpiar el carrito en la sesión
+        $session->remove('carrito');
+
+        // Obtener todas las compras asociadas al pedido
+        $compras = $pedido->getCompras();
+
+        // Convertir precios a float en PHP antes de pasarlos a Twig
+        $comprasArray = [];
+        foreach ($compras as $compra) {
+            $comprasArray[] = [
+                'idProducto' => $compra->getIdProducto(),
+                'unidades' => $compra->getUnidades(),
+                'precio_compra' => floatval($compra->getPrecio_compra())
+            ];
+        }
 
         // Renderizar la vista de confirmación de compra
         return $this->render('compra/confirmacion_compra.html.twig', [
-            'carrito' => $carrito,
-            'precioTotal' => $precioTotal
+            'compras' => $comprasArray,
+            'pedido' => $pedido,
         ]);
-    }
-
-    #[Route('/limpiar_carrito', name: 'limpiar_carrito', methods: ['POST'])]
-    public function limpiarCarrito(SessionInterface $session): Response
-    {
-        // Limpiar el carrito de la sesión
-        $session->remove('carrito');
-        return new JsonResponse(['success' => true]);
     }
 }

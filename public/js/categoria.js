@@ -30,8 +30,10 @@ function mostrarProductos(categoria, productos) {
     `);
   productos.forEach((element) => {
     $("#products").append(`<div class="product-card">
-    <img src="${element.imagen}" alt="${element.nombre}">
-    <h3>${element.nombre}</h3>
+    <a class="product-link" href="/producto/detalle/${element.id}">
+        <img src="${element.imagen}" alt="${element.nombre}">
+        <h3>${element.nombre}</h3>
+    </a>
     <p class="price">
         <span class="current-price">${element.precio}€</span>
     </p>

@@ -142,12 +142,25 @@ body {
 }
 
 
+.container .product-list, .container .tab-content {
+    margin-top: 40px; /* Ajusta el valor según la altura de tu cabecera */
+}
+
 /* Añadir padding superior para empujar el contenido hacia abajo */
 .container {
     padding-top: 40px; /* Ajusta el valor según la altura de tu cabecera */
 }
 
-.container .product-list, .container .tab-content {
-    margin-top: 100px; /* Ajusta el valor según la altura de tu cabecera */
+.product-link {
+    text-decoration: none; /* Quitar la subrayado de los enlaces */
+    color: inherit; /* Mantener el color del texto original */
 }
 
+.product-link:hover .card-img-top {
+    transform: scale(1.05); /* Un pequeño zoom en la imagen al pasar el ratón */
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-link:hover .card-title {
+    color: #0056b3; /* Cambiar el color del texto al pasar el ratón */
+}

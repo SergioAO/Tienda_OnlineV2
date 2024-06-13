@@ -72,7 +72,7 @@ class Compra
         return $this->idProducto;
     }
 
-    public function setIdProducto(?Producto $idProducto): self
+    public function setIdProducto(Producto $idProducto): self
     {
         $this->idProducto = $idProducto;
         return $this;

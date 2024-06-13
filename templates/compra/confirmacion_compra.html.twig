@@ -2,32 +2,6 @@
 
 {% block title %}Confirmación de Compra{% endblock %}
 
-{% block head %}
-    <script>
-        const ruta_limpiar_carrito = "{{ path('limpiar_carrito') }}"
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            // Hacer una petición AJAX para limpiar el carrito
-            $.ajax({
-                url: ruta_limpiar_carrito,
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                success: function(response) {
-                    console.log('Carrito limpiado:', response);
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al limpiar el carrito:', error);
-                }
-            });
-        });
-    </script>
-{% endblock %}
-
 {% block body %}
     <div class="container my-5">
         <h2>¡Compra realizada con éxito!</h2>
@@ -39,21 +13,36 @@
             </div>
             <div class="card-body">
                 <ul class="list-group">
-                    {% for producto in carrito %}
-                        <li class="list-group-item">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ producto.nombre }}</span>
-                                <span>{{ producto.cantidad }} x {{ producto.precio | number_format(2, ',', '.') }} €</span>
-                            </div>
-                            <div class="mt-1">
-                                <small class="text-muted">Precio total: {{ (producto.precio * producto.cantidad) | number_format(2, ',', '.') }} €</small>
-                            </div>
-                        </li>
-                    {% endfor %}
+                    {% if compras is not empty %}
+                        {% for compra in compras %}
+                            {% set precioUnitario = (compra.unidades != 0 ? (compra.precio_compra / compra.unidades) : 0) %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ compra.idProducto.nombre }}</span>
+                                    <span>{{ compra.unidades }} x {{ precioUnitario | number_format(2, ',', '.') }} €</span>
+                                </div>
+                                <div class="mt-1">
+                                    <small class="text-muted">Precio total: {{ compra.precio_compra | number_format(2, ',', '.') }} €</small>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="list-group-item">No hay compras registradas para este pedido.</li>
+                    {% endif %}
                 </ul>
             </div>
             <div class="card-footer">
-                <h4>Total: {{ precioTotal * 1.21 | number_format(2, ',', '.') }} €</h4>
+                {# Calcular el total #}
+                {% set total = 0 %}
+                {% for compra in compras %}
+                    {% set total = total + compra.precio_compra %}
+                {% endfor %}
+
+                {# Calcular el total con IVA #}
+                {% set totalConIVA = total * 1.21 %}
+
+                <h4>Total: {{ total | number_format(2, ',', '.') }} €</h4>
+                <h4>Total con IVA (21%): {{ totalConIVA | number_format(2, ',', '.') }} €</h4>
             </div>
         </div>
 

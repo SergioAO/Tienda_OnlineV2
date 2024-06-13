@@ -98,7 +98,7 @@
 								<div class="mt-3">
 									<img src="" alt="foto" class="img-fluid">
 									<div>Producto</div>
-									<div>Categoria</div>
+									<div>Categoría</div>
 									<button class="btn btn-danger">Eliminar</button>
 								</div>
 							</div>
@@ -132,29 +132,23 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', (event) => {
-			// Check if there's a hash in the URL
 			let hash = window.location.hash;
-
 			if (hash) {
-				// Activate the corresponding tab based on the URL hash
 				let tab = document.querySelector(`.nav-link[href="${hash}"]`);
 				let tabContent = document.querySelector(hash);
 
 				if (tab && tabContent) {
-					// Deactivate all tabs and contents
 					document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
 					document.querySelectorAll('.tab-pane').forEach((pane) => {
 						pane.classList.remove('show', 'active');
 						pane.classList.add('fade');
 					});
 
-					// Activate the selected tab and content
 					tab.classList.add('active');
 					tabContent.classList.add('show', 'active');
 				}
 			}
 
-			// Update the URL hash when a tab is clicked
 			document.querySelectorAll('.nav-link').forEach((link) => {
 				link.addEventListener('click', function (e) {
 					e.preventDefault();
@@ -165,7 +159,6 @@
 						location.hash = target;
 					}
 
-					// Activate the selected tab and content
 					document.querySelectorAll('.nav-link').forEach((link) => link.classList.remove('active'));
 					document.querySelectorAll('.tab-pane').forEach((pane) => pane.classList.remove('show', 'active'));
 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,8 +24,14 @@ class Pedido
     #[ORM\ManyToOne(inversedBy: 'pedidos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Usuario $idUsuario = null;
-    #[ORM\OneToMany(mappedBy: 'idPedido', targetEntity: Compra::class)]
+    #[ORM\OneToMany(targetEntity: Compra::class, mappedBy: 'idPedido')]
     private Collection $compras;
+
+    // Constructor para inicializar la colección compras
+    public function __construct()
+    {
+        $this->compras = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -93,4 +100,19 @@ class Pedido
         return $this;
     }
 
+    public function getTotal(): float
+    {
+        $total = 0.0;
+
+        foreach ($this->compras as $compra) {
+            $total += floatval($compra->getPrecio_compra());
+        }
+
+        return $total;
+    }
+
+    public function getTotalConIva(): float
+    {
+        return $this->getTotal() * 1.21; // Multiplicamos el total por 1.21 para incluir el IVA
+    }
 }

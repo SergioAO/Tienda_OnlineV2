@@ -46,7 +46,7 @@ class RegistroFormType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024',
+                        'maxSize' => '20000',
                         'mimeTypes' => [
                             'image/jpeg',
                             'image/png',

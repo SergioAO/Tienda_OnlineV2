@@ -2,7 +2,6 @@
 
 {% block title %}Productos - {{ filterName }}{% endblock %}
 
-
 {% block body %}
     <div class="container mt-4">
         <h1 class="mb-4">Productos - {{ filterName }}</h1>
@@ -12,16 +11,20 @@
                 {% for producto in products %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
-                            <img src="{{ asset(producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}">
+                            <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="product-link">
+                                <img src="{{ asset(producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}">
+                            </a>
                             <div class="card-body">
-                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="product-link">
+                                    <h5 class="card-title">{{ producto.nombre }}</h5>
+                                </a>
                                 <p class="card-text">{{ producto.descripcion }}</p>
                                 <p class="card-text"><strong>Precio: </strong>{{ producto.precio }}€</p>
                                 {% if producto.descuento %}
                                     <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
                                 {% endif %}
                             </div>
-                            <div class="add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}"  data-precio="{{ producto.precio }}" data-imagen="{{producto.imagen}}">
+                            <div class="add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">
                                 <button class="btn btn-primary w-100">Añadir al carrito</button>
                             </div>
                         </div>

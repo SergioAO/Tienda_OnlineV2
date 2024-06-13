@@ -9,7 +9,7 @@
   background-color: #f8f9fa; /* Color de fondo de Bootstrap */
   overflow-x: hidden;
   transition: 0.5s;
-  padding-top: 60px;
+  padding-top: 100px;
   border-right: 1px solid #ddd; /* Borde para separar del contenido principal */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para dar profundidad */
 }
@@ -216,4 +216,49 @@ h3 {
   margin-top: 20px; /* Espaciado entre secciones */
   font-size: 1.2rem; /* Tamaño de la fuente */
   font-weight: bold;
+}
+
+/* Estilos globales para el modo oscuro */
+.dark-mode {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Estilos específicos para el pie de página en el modo oscuro */
+.dark-mode footer {
+  background-color: #222 !important;
+  color: white !important;
+}
+
+/* Asegurarse de que los enlaces sean visibles en el modo oscuro */
+.dark-mode a {
+  color: #1e90ff !important;
+}
+
+/* Estilos adicionales para asegurar la visibilidad de todos los elementos */
+.dark-mode .navbar,
+.dark-mode .sidebar,
+.dark-mode .product-card {
+  background-color: #444 !important;
+  color: white !important;
+  border-color: #555 !important;
+}
+
+.dark-mode .product-card img {
+  border: 1px solid #555;
+}
+
+.dark-mode .btn {
+  background-color: #555 !important;
+  border-color: #666 !important;
+}
+
+/* Sobrescribir el estilo text-muted para el modo oscuro */
+.dark-mode .text-muted {
+  color: #999 !important;  /* Un color más claro que sea visible en el fondo oscuro */
+}
+
+/* Asegurar que los elementos con clase text-center en el modo oscuro sean visibles */
+.dark-mode .text-center {
+  color: white !important;
 }

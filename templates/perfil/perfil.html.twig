@@ -24,18 +24,35 @@
 					<div class="tab-pane fade show active" id="informacion" role="tabpanel" aria-labelledby="informacion-tab">
 						<div class="card">
 							<div class="card-body">
-								<h5 class="card-title">Información Personal</h5>
-								<p class="card-text"><strong>Nombre:</strong> {{ usuario.getNombre() }}</p>
-								<p class="card-text"><strong>Apellidos:</strong> {{ usuario.getApellidos() }}</p>
-								<p class="card-text"><strong>Correo Electrónico:</strong> {{ usuario.getEmail() }}</p>
+								<h5 class="card-title text-center">Información Personal</h5>
+								<div class="row align-items-center">
+									<div class="col-md-4 text-center">
+										{% if usuario.getPhoto() %}
+											<!-- Mostrar la foto del usuario -->
+											<img src="{{ asset('uploads/usuarios/' ~ usuario.getPhoto()) }}" class="img-thumbnail rounded-circle" alt="Foto de {{ usuario.getNombre() }}" style="width: 150px; height: 150px; object-fit: cover;">
+										{% else %}
+											<!-- Imagen predeterminada si no hay foto del usuario -->
+											<img src="{{ asset('images/default-user.png') }}" class="img-thumbnail rounded-circle" alt="Foto predeterminada" style="width: 150px; height: 150px; object-fit: cover;">
+										{% endif %}
+									</div>
+									<div class="col-md-8">
+										<p class="card-text"><strong>Nombre:</strong> {{ usuario.getNombre() }}</p>
+										<p class="card-text"><strong>Apellidos:</strong> {{ usuario.getApellidos() }}</p>
+										<p class="card-text"><strong>Correo Electrónico:</strong> {{ usuario.getEmail() }}</p>
+									</div>
+								</div>
 								<hr>
-								<h5 class="card-title">Pedidos Realizados</h5>
+								<h5 class="card-title text-center">Pedidos Realizados</h5>
 								{% if usuario.getPedidos() is empty %}
-									<p class="card-text">No se han realizado pedidos.</p>
+									<p class="card-text text-center">No se han realizado pedidos.</p>
 								{% else %}
 									<ul class="list-group">
 										{% for pedido in usuario.getPedidos() %}
-											<li class="list-group-item">Pedido #{{ pedido.getId() }} - Total: {{ pedido.getTotal() }}€</li>
+											<li class="list-group-item">
+												Pedido #{{ pedido.getId() }} -
+												Total: {{ pedido.getTotal() | number_format(2, ',', '.') }}€
+												(Total con IVA: {{ pedido.getTotalConIva() | number_format(2, ',', '.') }}€)
+											</li>
 										{% endfor %}
 									</ul>
 								{% endif %}

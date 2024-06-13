@@ -1,0 +1,36 @@
+{# templates/home/producto_buscado.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Resultados de la Búsqueda{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Resultados de la Búsqueda</h1>
+
+        {% if productos is not empty %}
+            <div class="row">
+                {% for producto in productos %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="{{ asset(producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ producto.nombre }}</h5>
+                                <p class="card-text">{{ producto.descripcion }}</p>
+                                <p class="card-text"><strong>Precio: </strong>{{ producto.precio }}€</p>
+                                {% if producto.descuento %}
+                                    <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer">
+                                <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="btn btn-info">Ver Detalles</a>
+                                <button class="btn btn-primary add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No se encontraron productos con el término de búsqueda especificado.</p>
+        {% endif %}
+    </div>
+{% endblock %}

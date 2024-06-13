@@ -1,34 +1,59 @@
-{#<!-- templates/home/home.html.twig -->#}
 {% extends 'base.html.twig' %}
 
-{% block head %}
-	<script>
-		const ruta_producto_categoria = "{{ path('productos_por_categoria', { 'categoria': '_' }) }}"
-	</script>
-	<script src="{{asset("js/categoria.js")}}" defer></script>
-{% endblock %}
+{% block title %}Detalle del Producto{% endblock %}
+
 {% block body %}
-	<div class="container">
-		<div class="tab-content" id="categoryTabContent">
-			<div class="tab-pane fade show active" role="tabpanel" >
-				<div id="products" class="product-list">
-					{% for producto in productos %}
-						<div class="product-card">
-							<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
-							<h3>{{ producto.nombre }}</h3>
-							<p class="price">
-								<span class="current-price">{{ producto.precio }}€</span>
-							</p>
-							<button class="add-to-cart" data-id="{{producto.id}}" data-nombre="{{producto.nombre}}" data-precio="{{producto.precio}}">Añadir al carrito</button>
-						</div>
-					{% endfor %}
-				</div>
+	<div class="container mt-5">
+		<div class="row">
+			<div class="col-md-6 offset-md-3">
+				<h1>{{ producto.nombre }}</h1>
+				<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}" class="img-fluid">
+				<p class="price"><strong>Precio:</strong> {{ producto.precio }}€</p>
+				<p>{{ producto.descripcion }}</p>
+				<button class="btn btn-primary add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
+
+				<hr>
+
+				<h3>Comentarios</h3>
+				{% if preguntas is not empty %}
+					<ul class="list-group">
+						{% for pregunta in preguntas %}
+							<li class="list-group-item">
+								<div class="d-flex align-items-start">
+									<div class="flex-shrink-0">
+										{% if pregunta.usuario.photo %}
+											<img src="{{ asset('uploads/usuarios/' ~ pregunta.usuario.photo) }}" class="rounded-circle" alt="Foto de {{ pregunta.usuario.nombre }}" style="width: 50px; height: 50px; object-fit: cover;">
+										{% else %}
+											<img src="{{ asset('images/default-user.png') }}" class="rounded-circle" alt="Foto predeterminada" style="width: 50px; height: 50px; object-fit: cover;">
+										{% endif %}
+									</div>
+									<div class="flex-grow-1 ms-3">
+										<p><strong>{{ pregunta.usuario.nombre }}:</strong> {{ pregunta.texto }}</p>
+										<small class="text-muted">{{ pregunta.fecha|date('d-m-Y H:i') }}</small>
+									</div>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>No hay comentarios todavía.</p>
+				{% endif %}
+
+				<hr>
+
+				<h4>Añadir un comentario</h4>
+				{% if app.user %}
+					{{ form_start(form) }}
+					<div class="form-group">
+						{{ form_label(form.texto) }}
+						{{ form_widget(form.texto, {'attr': {'class': 'form-control'}}) }}
+					</div>
+					<button type="submit" class="btn btn-primary mt-3">Publicar comentario</button>
+					{{ form_end(form) }}
+				{% else %}
+					<p>Debes <a href="{{ path('app_login') }}">iniciar sesión</a> para publicar comentarios.</p>
+				{% endif %}
 			</div>
 		</div>
 	</div>
-
-{% endblock %}
-
-{% block javascripts %}
-	{{ encore_entry_script_tags('app') }}
 {% endblock %}
