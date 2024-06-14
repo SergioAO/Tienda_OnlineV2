@@ -1,3 +1,5 @@
+{# templates/compra/confirmacion_compra.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Confirmación de Compra{% endblock %}
@@ -15,11 +17,10 @@
                 <ul class="list-group">
                     {% if compras is not empty %}
                         {% for compra in compras %}
-                            {% set precioUnitario = (compra.unidades != 0 ? (compra.precio_compra / compra.unidades) : 0) %}
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between">
-                                    <span>{{ compra.idProducto.nombre }}</span>
-                                    <span>{{ compra.unidades }} x {{ precioUnitario | number_format(2, ',', '.') }} €</span>
+                                    <span>{{ compra.nombreProducto }}</span>
+                                    <span>{{ compra.unidades }} x {{ (compra.precio_compra / compra.unidades) | number_format(2, ',', '.') }} €</span>
                                 </div>
                                 <div class="mt-1">
                                     <small class="text-muted">Precio total: {{ compra.precio_compra | number_format(2, ',', '.') }} €</small>
@@ -32,20 +33,12 @@
                 </ul>
             </div>
             <div class="card-footer">
-                {# Calcular el total #}
-                {% set total = 0 %}
-                {% for compra in compras %}
-                    {% set total = total + compra.precio_compra %}
-                {% endfor %}
-
-                {# Calcular el total con IVA #}
-                {% set totalConIVA = total * 1.21 %}
-
-                <h4>Total: {{ total | number_format(2, ',', '.') }} €</h4>
-                <h4>Total con IVA (21%): {{ totalConIVA | number_format(2, ',', '.') }} €</h4>
+                <h4>Total: {{ pedido.getTotal | number_format(2, ',', '.') }} €</h4>
+                <h4>Total con IVA (21%): {{ pedido.getTotalConIva | number_format(2, ',', '.') }} €</h4>
             </div>
         </div>
 
         <a href="{{ path('home') }}" class="btn btn-primary mt-4">Volver a la Página Principal</a>
+        <a href="{{ path('descargar_factura', { 'pedidoId': pedido.id }) }}" class="btn btn-secondary mt-4">Descargar Factura</a>
     </div>
 {% endblock %}

@@ -1,0 +1,89 @@
+{# templates/compra/factura.html.twig #}
+
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Factura de Compra</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+            }
+            .header, .footer {
+                text-align: center;
+                margin: 10px 0;
+            }
+            .content {
+                margin: 20px;
+            }
+            .content h2 {
+                text-align: center;
+            }
+            .content p {
+                margin: 5px 0;
+            }
+            .details {
+                margin-top: 20px;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            .details th, .details td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+            .details th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Factura de Compra</h1>
+        </div>
+
+        <div class="content">
+            <h2>Detalles del Usuario</h2>
+            <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+
+            <h2>Detalles del Pedido</h2>
+            <p><strong>ID del Pedido:</strong> {{ pedido.id }}</p>
+            <p><strong>Fecha del Pedido:</strong> {{ pedido.fecha | date('d-m-Y') }}</p>
+
+            <table class="details">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Precio Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for compra in compras %}
+                    <tr>
+                        <td>{{ compra.idProducto.nombre }}</td>
+                        <td>{{ compra.unidades }}</td>
+                        <td>{{ (compra.precio_compra / compra.unidades) | number_format(2, ',', '.') }} €</td>
+                        <td>{{ compra.precio_compra | number_format(2, ',', '.') }} €</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {# Calcular el total y el total con IVA #}
+            {% set total = 0 %}
+            {% for compra in compras %}
+                {% set total = total + compra.precio_compra %}
+            {% endfor %}
+            {% set totalConIVA = total * 1.21 %}
+
+            <p><strong>Total:</strong> {{ total | number_format(2, ',', '.') }} €</p>
+            <p><strong>Total con IVA (21%):</strong> {{ totalConIVA | number_format(2, ',', '.') }} €</p>
+        </div>
+
+        <div class="footer">
+            <p>Gracias por tu compra.</p>
+        </div>
+    </body>
+</html>

@@ -663,27 +663,21 @@ class HomeController extends AbstractController
         // Obtener los productos del carrito desde la sesión
         $carrito = $session->get('carrito', []);
 
-        // Verificar si el carrito está vacío
         if (empty($carrito)) {
-            // Si el carrito está vacío, redirigir a la página principal con un mensaje de advertencia
             $this->addFlash('warning', 'No hay productos en tu carrito.');
             return $this->redirectToRoute('home');
         }
 
-        $userInterface = $this->getUser();
-        $usuario = $this->repo_usuario->findOneByEmail($userInterface->getUserIdentifier());
-
+        // Obtener el usuario logueado
+        $usuario = $this->getUser();
         if (!$usuario) {
-            // Si no hay usuario logueado, redirigir a la página de inicio de sesión
             $this->addFlash('warning', 'Debes iniciar sesión para confirmar tu compra.');
             return $this->redirectToRoute('login');
         }
 
-        // Obtener la dirección del usuario desde la entidad DatoDePago
+        // Obtener la dirección del usuario
         $datoDePago = $em->getRepository(DatoDePago::class)->findOneBy(['usuario' => $usuario]);
-
         if (!$datoDePago) {
-            // Si no se encuentra la dirección, mostrar un mensaje de error
             $this->addFlash('warning', 'No se pudo encontrar la dirección de envío.');
             return $this->redirectToRoute('home');
         }
@@ -701,19 +695,15 @@ class HomeController extends AbstractController
 
         // Guardar los productos del carrito como Compras
         foreach ($carrito as $productoData) {
-            // Buscar la entidad Producto usando su ID
             $producto = $em->getRepository(Producto::class)->find($productoData['id']);
-
             if (!$producto) {
-                // Si no se encuentra el producto, mostrar un mensaje de error
                 $this->addFlash('warning', 'No se pudo encontrar el producto con ID: ' . $productoData['id']);
                 return $this->redirectToRoute('carrito');
             }
 
-            // Verificar si hay suficiente stock
+            // Verificar el stock
             $cantidad = $productoData['cantidad'];
             if ($producto->getStock() < $cantidad) {
-                // Si no hay suficiente stock, mostrar un mensaje de error
                 $this->addFlash('warning', 'No hay suficiente stock para el producto: ' . $producto->getNombre());
                 return $this->redirectToRoute('carrito');
             }
@@ -726,15 +716,12 @@ class HomeController extends AbstractController
             $compra->setIdPedido($pedido);
             $compra->setIdProducto($producto);
             $compra->setUnidades($cantidad);
-
-            // Calcular el precio total de la compra y guardarlo
             $precioCompra = floatval($productoData['precio']) * floatval($cantidad);
             $compra->setPrecio_compra((string) $precioCompra);
 
-            // Añadir la compra al pedido
             $pedido->addCompra($compra);
 
-            // Persistir la compra y el producto (con stock actualizado)
+            // Persistir la compra y el producto
             $em->persist($compra);
             $em->persist($producto);
         }
@@ -748,13 +735,14 @@ class HomeController extends AbstractController
         // Obtener todas las compras asociadas al pedido
         $compras = $pedido->getCompras();
 
-        // Convertir precios a float en PHP antes de pasarlos a Twig
+        // Convertir compras a un array para pasar a la vista
         $comprasArray = [];
         foreach ($compras as $compra) {
             $comprasArray[] = [
-                'idProducto' => $compra->getIdProducto(),
+                'idProducto' => $compra->getIdProducto()->getId(),
+                'nombreProducto' => $compra->getIdProducto()->getNombre(),
                 'unidades' => $compra->getUnidades(),
-                'precio_compra' => floatval($compra->getPrecio_compra())
+                'precio_compra' => floatval($compra->getPrecio_compra()),
             ];
         }
 
