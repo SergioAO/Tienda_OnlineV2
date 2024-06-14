@@ -151,3 +151,8 @@ body {
     margin-top: 100px; /* Ajusta el valor según la altura de tu cabecera */
 }
 
+/* Asegurar que los elementos con clase text-center en el modo oscuro sean visibles */
+.dark-mode .text-center {
+    color: white !important;
+}
+

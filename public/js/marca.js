@@ -29,9 +29,10 @@ function mostrarMarcas(marca, productos) {
     </div>
     `);
 
-   productos.forEach((element) => {
-      $("#products-marca").append(`
-    <div class="product-card">
+    productos.forEach((element) => {
+        // Crear la estructura base del producto
+        let productCard = `
+    <div class="product-card ${element.stock === 0 ? 'out-of-stock' : ''}">
         <a class="product-link" href="/producto/detalle/${element.id}">
             <img src="${element.imagen}" alt="${element.nombre}">
             <h3>${element.nombre}</h3>
@@ -42,9 +43,34 @@ function mostrarMarcas(marca, productos) {
         <p class="stock">
             <strong>Stock disponible:</strong> ${element.stock} unidades
         </p>
-        <button class="add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}">
+    `;
+
+        // Añadir el botón correspondiente dependiendo del stock
+        if (element.stock > 0) {
+            productCard += `
+        <button class="btn btn-primary add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}">
             Añadir al carrito
         </button>
-    </div>`);
-   });
+        `;
+        } else {
+            productCard += `
+        <button class="btn btn-primary notify-me" data-id="${element.id}" data-nombre="${element.nombre}" data-email="${element.email}">
+            Notificarme cuando haya stock
+        </button>
+        `;
+
+            // Añadir el botón "Ver Detalles" solo si el usuario es administrador
+            if (element.isAdmin) {
+                productCard += `
+            <a href="/producto/detalle/${element.id}" class="btn btn-info w-100 mt-2">Ver Detalles</a>
+            `;
+            }
+        }
+
+        // Cerrar la estructura del producto
+        productCard += `</div>`;
+
+        // Añadir el producto a la lista
+        $("#products-marca").append(productCard);
+    });
 }

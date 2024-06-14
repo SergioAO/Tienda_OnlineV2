@@ -262,3 +262,53 @@ h3 {
 .dark-mode .text-center {
   color: white !important;
 }
+
+/* Estilo para productos sin stock */
+.product-card.out-of-stock {
+  opacity: 0.6;
+  pointer-events: none; /* Desactiva la interacción con elementos fuera de stock */
+}
+
+/* Permitir interacción con el botón "Ver Detalles" para administradores */
+.product-card.out-of-stock .btn-info {
+  pointer-events: auto; /* Permitir hacer clic en el botón "Ver Detalles" */
+  cursor: pointer;
+}
+
+/* Estilo común para los botones */
+.product-card button.add-to-cart,
+.product-card button.notify-me,
+.product-card .btn-info {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.product-card button.add-to-cart {
+  background-color: #007bff; /* Color de fondo azul */
+  color: white; /* Color del texto */
+}
+
+.product-card button.notify-me {
+  background-color: #007bff; /* Mismo color de fondo azul */
+  color: white; /* Mismo color del texto */
+}
+
+.product-card .btn-info {
+  background-color: #17a2b8; /* Color de fondo azul claro para el botón "Ver Detalles" */
+  color: white; /* Color del texto */
+}
+
+/* Efecto hover para botones */
+.product-card button.add-to-cart:hover,
+.product-card button.notify-me:hover,
+.product-card .btn-info:hover {
+  background-color: #0056b3; /* Azul más oscuro en hover */
+}
+
+.product-card .btn-info:hover {
+  background-color: #117a8b; /* Azul claro más oscuro en hover para el botón "Ver Detalles" */
+}

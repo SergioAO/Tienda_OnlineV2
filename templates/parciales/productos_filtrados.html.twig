@@ -2,6 +2,12 @@
 
 {% block title %}Productos - {{ filterName }}{% endblock %}
 
+{% block head %}
+    <!-- Añadimos los mismos scripts y estilos que en la home -->
+    <link rel="stylesheet" href="{{ asset('css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/vendors-node_modules_bootstrap-icons_font_bootstrap-icons_css-node_modules_bootstrap_dist_css-b08609.css') }}">
+{% endblock %}
+
 {% block body %}
     <div class="container mt-4">
         <h1 class="mb-4">Productos - {{ filterName }}</h1>
@@ -10,26 +16,29 @@
             <div class="row">
                 {% for producto in products %}
                     <div class="col-md-4 mb-4">
-                        <div class="card h-100">
+                        <div class="product-card {% if producto.stock == 0 %}out-of-stock{% endif %}">
                             <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="product-link">
-                                <img src="{{ asset(producto.imagen) }}" class="card-img-top" alt="{{ producto.nombre }}">
+                                <img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
+                                <h3>{{ producto.nombre }}</h3>
                             </a>
-                            <div class="card-body">
-                                <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="product-link">
-                                    <h5 class="card-title">{{ producto.nombre }}</h5>
-                                </a>
-                                <p class="card-text">{{ producto.descripcion }}</p>
-                                <p class="card-text"><strong>Precio: </strong>{{ producto.precio }}€</p>
-                                {% if producto.descuento %}
-                                    <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
-                                {% endif %}
-                                <p class="card-text"><strong>Stock disponible: </strong>{{ producto.stock }}</p> <!-- Línea para mostrar el stock disponible -->
-                            </div>
-                            <div class="card-footer">
-                                <button class="btn btn-primary w-100 add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">
+                            <p class="price">
+                                <span class="current-price">{{ producto.precio }}€</span>
+                            </p>
+                            <p class="stock">
+                                <span class="current-stock">Stock: {{ producto.stock }}</span>
+                            </p>
+                            {% if producto.stock > 0 %}
+                                <button class="add-to-cart btn btn-primary w-100" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">
                                     Añadir al carrito
                                 </button>
-                            </div>
+                            {% else %}
+                                <button class="notify-me btn btn-primary w-100" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-imagen="{{ producto.imagen }}" data-email="{{ app.user ? app.user.email : '' }}">
+                                    Notificarme cuando haya stock
+                                </button>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="btn btn-info w-100 mt-2">Ver Detalles</a>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}
@@ -38,4 +47,9 @@
             <p>No hay productos disponibles en esta categoría o marca.</p>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Mantener la carga de scripts al final -->
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}

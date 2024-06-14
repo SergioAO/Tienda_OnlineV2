@@ -84,6 +84,9 @@ class HomeController extends AbstractController
         $productos = $this->entityManager->getRepository(Producto::class)
             ->findBy(['categoria' => $categoria]);
 
+        // Determinar si el usuario actual es administrador
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         // Preparar la respuesta JSON con los productos
         $productosArray = [];
         foreach ($productos as $producto) {
@@ -93,6 +96,7 @@ class HomeController extends AbstractController
                 'imagen' => $producto->getImagen(),
                 'stock' => $producto->getStock(),
                 'precio' => $producto->getPrecio(),
+                'isAdmin' => $isAdmin,
             ];
         }
 
@@ -107,6 +111,9 @@ class HomeController extends AbstractController
         $productos = $this->entityManager->getRepository(Producto::class)
             ->findBy(['marca' => $marca]);
 
+        // Determinar si el usuario actual es administrador
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         // Preparar la respuesta JSON con los productos
         $productosArray = [];
         foreach ($productos as $producto) {
@@ -116,6 +123,7 @@ class HomeController extends AbstractController
                 'imagen' => $producto->getImagen(),
                 'stock' => $producto->getStock(),
                 'precio' => $producto->getPrecio(),
+                'isAdmin' => $isAdmin,
             ];
         }
 

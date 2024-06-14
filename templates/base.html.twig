@@ -21,11 +21,13 @@
             const ruta_carrito_eliminar = "{{ path('carrito_eliminar') }}"
             const ruta_producto_mark = "{{ path('productos_marca', {'marca': '_'}) }}"
             const ruta_producto_category = "{{ path('productos_categoria', {'categoria': '_'}) }}"
+            const ruta_notificacion = "{{ path('notificar_stock') }}"
 		</script>
 		<script src="{{asset("js/base.js")}}" defer></script>
 		<script src="{{asset("js/carrito.js")}}" defer></script>
         <script src="{{asset("js/funciones.js")}}" defer></script>
         <script src="{{asset("js/geolocalizacion.js")}}" defer></script>
+        <script src="{{asset("js/notificacion.js")}}" defer></script>
 {#        <script src="{{asset("js/validaRegistro.js")}}" defer></script>#}
 		{% block head %}{% endblock %}
 

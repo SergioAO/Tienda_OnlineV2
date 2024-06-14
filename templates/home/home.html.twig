@@ -8,8 +8,10 @@
 	<script src="{{ asset('js/categoria.js') }}" defer></script>
 	<script src="{{ asset('js/marca.js') }}" defer></script>
 {% endblock %}
+
 {% block body %}
 	<div class="container">
+		<!-- Categorías -->
 		<ul class="nav nav-tabs" id="categoryTab" role="tablist">
 			{% for categoria in categorias %}
 				<li class="nav-item" role="presentation">
@@ -22,7 +24,7 @@
 				<div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ categoria.categoria }}" role="tabpanel" aria-labelledby="tab-{{ categoria.categoria }}">
 					<div id="products" class="product-list">
 						{% for producto in productos %}
-							<div class="product-card">
+							<div class="product-card {% if producto.stock == 0 %}out-of-stock{% endif %}">
 								<a class="product-link" href="{{ path('producto_detalle', { 'id': producto.id }) }}">
 									<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
 									<h3>{{ producto.nombre }}</h3>
@@ -33,7 +35,14 @@
 								<p class="stock">
 									<span class="current-stock">Stock: {{ producto.stock }}</span>
 								</p>
-								<button class="add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
+								{% if producto.stock > 0 %}
+									<button class="btn btn-primary w-100 add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
+								{% else %}
+									<button class="btn btn-primary w-100 notify-me" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-imagen="{{ producto.imagen }}" data-email="{{ app.user ? app.user.email : '' }}">Notificarme cuando haya stock</button>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="btn btn-info w-100 mt-2">Ver Detalles</a>
+									{% endif %}
+								{% endif %}
 							</div>
 						{% endfor %}
 					</div>
@@ -46,6 +55,7 @@
 	<br>
 
 	<div class="container">
+		<!-- Marcas -->
 		<ul class="nav nav-tabs" id="marcaTab" role="tablist">
 			{% for marca in marcas %}
 				<li class="nav-item" role="presentation">
@@ -58,7 +68,7 @@
 				<div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ marca.marca }}" role="tabpanel" aria-labelledby="tab-{{ marca.marca }}">
 					<div id="products-marca" class="product-list">
 						{% for producto_marca in productos_marca %}
-							<div class="product-card">
+							<div class="product-card {% if producto_marca.stock == 0 %}out-of-stock{% endif %}">
 								<a class="product-link" href="{{ path('producto_detalle', { 'id': producto_marca.id }) }}">
 									<img src="{{ asset(producto_marca.imagen) }}" alt="{{ producto_marca.nombre }}">
 									<h3>{{ producto_marca.nombre }}</h3>
@@ -69,7 +79,14 @@
 								<p class="stock">
 									<span class="current-stock">Stock: {{ producto_marca.stock }}</span>
 								</p>
-								<button class="add-to-cart" data-id="{{ producto_marca.id }}" data-nombre="{{ producto_marca.nombre }}" data-precio="{{ producto_marca.precio }}" data-imagen="{{ producto_marca.imagen }}">Añadir al carrito</button>
+								{% if producto_marca.stock > 0 %}
+									<button class="btn btn-primary w-100 add-to-cart" data-id="{{ producto_marca.id }}" data-nombre="{{ producto_marca.nombre }}" data-precio="{{ producto_marca.precio }}" data-imagen="{{ producto_marca.imagen }}">Añadir al carrito</button>
+								{% else %}
+									<button class="btn btn-primary w-100 notify-me" data-id="{{ producto_marca.id }}" data-nombre="{{ producto_marca.nombre }}" data-imagen="{{ producto_marca.imagen }}" data-email="{{ app.user ? app.user.email : '' }}">Notificarme cuando haya stock</button>
+									{% if is_granted('ROLE_ADMIN') %}
+										<a href="{{ path('producto_detalle', { 'id': producto_marca.id }) }}" class="btn btn-info w-100 mt-2">Ver Detalles</a>
+									{% endif %}
+								{% endif %}
 							</div>
 						{% endfor %}
 					</div>

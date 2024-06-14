@@ -164,3 +164,49 @@ body {
 .product-link:hover .card-title {
     color: #0056b3; /* Cambiar el color del texto al pasar el ratón */
 }
+
+.product-card.out-of-stock {
+    opacity: 0.6;
+    pointer-events: none; /* Evita que el usuario interactúe con elementos que están fuera de stock */
+}
+
+.product-card.out-of-stock button.notify-me {
+    pointer-events: auto; /* Permite hacer clic en el botón de notificación incluso si el resto de la tarjeta está desactivada */
+    cursor: pointer;
+}
+
+.product-card.out-of-stock .price,
+.product-card.out-of-stock .stock {
+    color: #ff0000; /* Color rojo para destacar la falta de stock */
+}
+
+.product-card.out-of-stock img {
+    filter: grayscale(100%); /* Convertir la imagen en blanco y negro */
+}
+
+/* Estilo común para los botones */
+.product-card button.add-to-cart,
+.product-card button.notify-me {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.product-card button.add-to-cart {
+    background-color: #007bff; /* Color de fondo azul */
+    color: white; /* Color del texto */
+}
+
+.product-card button.notify-me {
+    background-color: #007bff; /* Mismo color de fondo azul */
+    color: white; /* Mismo color del texto */
+}
+
+/* Opcional: Agregar un efecto de hover para ambos botones */
+.product-card button.add-to-cart:hover,
+.product-card button.notify-me:hover {
+    background-color: #0056b3; /* Un azul más oscuro para el hover */
+}

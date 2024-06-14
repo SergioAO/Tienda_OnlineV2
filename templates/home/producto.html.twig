@@ -2,6 +2,13 @@
 
 {% block title %}Detalle del Producto{% endblock %}
 
+{% block head %}
+	<script>
+		const ruta_stock_producto = "{{ path('actualizar_stock_producto') }}"
+	</script>
+	<script src="{{ asset('js/stock.js') }}" defer></script>
+{% endblock %}
+
 {% block body %}
 	<div class="container mt-5">
 		<div class="row">
@@ -11,6 +18,18 @@
 				<p class="price"><strong>Precio:</strong> {{ producto.precio }}€</p>
 				<p class="stock"><strong>Stock disponible:</strong> {{ producto.stock }}</p>
 				<p>{{ producto.descripcion }}</p>
+
+				{% if is_granted('ROLE_ADMIN') %}
+					<div class="stock-controls mb-3">
+						<button class="btn btn-outline-secondary stock-decrease" data-id="{{ producto.id }}">
+							<i class="bi bi-dash"></i>
+						</button>
+						<button class="btn btn-outline-secondary stock-increase" data-id="{{ producto.id }}">
+							<i class="bi bi-plus"></i>
+						</button>
+					</div>
+				{% endif %}
+
 				<button class="btn btn-primary add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
 
 				<hr>
@@ -57,4 +76,9 @@
 			</div>
 		</div>
 	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('app') }}
+
 {% endblock %}
