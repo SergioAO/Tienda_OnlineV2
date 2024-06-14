@@ -23,9 +23,12 @@
                                 {% if producto.descuento %}
                                     <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
                                 {% endif %}
+                                <p class="card-text"><strong>Stock disponible: </strong>{{ producto.stock }}</p> <!-- Línea para mostrar el stock disponible -->
                             </div>
-                            <div class="add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">
-                                <button class="btn btn-primary w-100">Añadir al carrito</button>
+                            <div class="card-footer">
+                                <button class="btn btn-primary w-100 add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">
+                                    Añadir al carrito
+                                </button>
                             </div>
                         </div>
                     </div>

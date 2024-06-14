@@ -21,106 +21,134 @@
 
 				<!-- Nav tabs -->
 				<ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+					{% if is_granted('ROLE_ADMIN') %}
+						<li class="nav-item" role="presentation">
+							<a class="nav-link active" id="agregar-tab" data-bs-toggle="tab" href="#agregar" role="tab" aria-controls="agregar" aria-selected="true">Agregar Producto</a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link" id="eliminar-producto-tab" data-bs-toggle="tab" href="#eliminar-producto" role="tab" aria-controls="eliminar-producto" aria-selected="false">Eliminar Producto</a>
+						</li>
+						<li class="nav-item" role="presentation">
+							<a class="nav-link" id="eliminar-usuario-tab" data-bs-toggle="tab" href="#eliminar-usuario" role="tab" aria-controls="eliminar-usuario" aria-selected="false">Eliminar Usuario</a>
+						</li>
+					{% endif %}
 					<li class="nav-item" role="presentation">
-						<a class="nav-link active" id="agregar-tab" data-bs-toggle="tab" href="#agregar" role="tab" aria-controls="agregar" aria-selected="true">Agregar Producto</a>
-					</li>
-					<li class="nav-item" role="presentation">
-						<a class="nav-link" id="eliminar-producto-tab" data-bs-toggle="tab" href="#eliminar-producto" role="tab" aria-controls="eliminar-producto" aria-selected="false">Eliminar Producto</a>
-					</li>
-					<li class="nav-item" role="presentation">
-						<a class="nav-link" id="eliminar-usuario-tab" data-bs-toggle="tab" href="#eliminar-usuario" role="tab" aria-controls="eliminar-usuario" aria-selected="false">Eliminar Usuario</a>
+						<a class="nav-link {% if not is_granted('ROLE_ADMIN') %}active{% endif %}" id="cambiar-password-tab" data-bs-toggle="tab" href="#cambiar-password" role="tab" aria-controls="cambiar-password" aria-selected="{% if not is_granted('ROLE_ADMIN') %}true{% else %}false{% endif %}">Cambiar Contraseña</a>
 					</li>
 				</ul>
 
 				<!-- Tab panes -->
 				<div class="tab-content">
-					<!-- Agregar Producto -->
-					<div class="tab-pane fade show active" id="agregar" role="tabpanel" aria-labelledby="agregar-tab">
-						<div class="container_productos_agregar">
-							<form action="{{ path('nuevoProducto') }}" enctype="multipart/form-data" method="post">
-								<div class="mb-3">
-									<label for="nombre" class="form-label">Nombre</label>
-									<input type="text" name="nombre" id="nombre" class="form-control">
-								</div>
-								<div class="mb-3">
-									<label for="descripcion" class="form-label">Descripción</label>
-									<input type="text" name="descripcion" id="descripcion" class="form-control">
-								</div>
-								<div class="mb-3">
-									<label for="precio" class="form-label">Precio</label>
-									<input type="number" name="precio" id="precio" class="form-control">
-								</div>
-								<div class="mb-3">
-									<label for="categoria" class="form-label">Categoría</label>
-									<select name="categoria" id="categoria" class="form-select">
-										{% for item in categorias %}
-											<option value="{{ item.categoria }}">{{ item.categoria }}</option>
-										{% endfor %}
-									</select>
-								</div>
-								<div class="mb-3">
-									<label for="marca" class="form-label">Marca</label>
-									<select name="marca" id="marca" class="form-select">
-										<option value="">Elegir</option>
-										{% for item in marcas %}
-											<option value="{{ item.marca }}">{{ item.marca }}</option>
-										{% endfor %}
-									</select>
-								</div>
-								<div class="mb-3">
-									<label for="color" class="form-label">Color</label>
-									<input type="text" name="color" id="color" class="form-control">
-								</div>
-								<div class="mb-3">
-									<label for="stock" class="form-label">Stock</label>
-									<input type="number" name="stock" id="stock" class="form-control">
-								</div>
-								<div class="mb-3">
-									<label for="foto" class="form-label">Foto</label>
-									<input type="file" name="foto" id="foto" class="form-control">
-								</div>
-								<div class="d-grid">
-									<button type="submit" class="btn btn-primary btn-block">Enviar</button>
-								</div>
-							</form>
+					{% if is_granted('ROLE_ADMIN') %}
+						<!-- Agregar Producto -->
+						<div class="tab-pane fade show active" id="agregar" role="tabpanel" aria-labelledby="agregar-tab">
+							<div class="container_productos_agregar">
+								<form action="{{ path('nuevoProducto') }}" enctype="multipart/form-data" method="post">
+									<div class="mb-3">
+										<label for="nombre" class="form-label">Nombre</label>
+										<input type="text" name="nombre" id="nombre" class="form-control">
+									</div>
+									<div class="mb-3">
+										<label for="descripcion" class="form-label">Descripción</label>
+										<input type="text" name="descripcion" id="descripcion" class="form-control">
+									</div>
+									<div class="mb-3">
+										<label for="precio" class="form-label">Precio</label>
+										<input type="number" name="precio" id="precio" class="form-control">
+									</div>
+									<div class="mb-3">
+										<label for="categoria" class="form-label">Categoría</label>
+										<select name="categoria" id="categoria" class="form-select">
+											{% for item in categorias %}
+												<option value="{{ item.categoria }}">{{ item.categoria }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="mb-3">
+										<label for="marca" class="form-label">Marca</label>
+										<select name="marca" id="marca" class="form-select">
+											<option value="">Elegir</option>
+											{% for item in marcas %}
+												<option value="{{ item.marca }}">{{ item.marca }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="mb-3">
+										<label for="color" class="form-label">Color</label>
+										<input type="text" name="color" id="color" class="form-control">
+									</div>
+									<div class="mb-3">
+										<label for="stock" class="form-label">Stock</label>
+										<input type="number" name="stock" id="stock" class="form-control">
+									</div>
+									<div class="mb-3">
+										<label for="foto" class="form-label">Foto</label>
+										<input type="file" name="foto" id="foto" class="form-control">
+									</div>
+									<div class="d-grid">
+										<button type="submit" class="btn btn-primary btn-block">Enviar</button>
+									</div>
+								</form>
+							</div>
 						</div>
-					</div>
 
-					<!-- Eliminar Producto -->
-					<div class="tab-pane fade" id="eliminar-producto" role="tabpanel" aria-labelledby="eliminar-producto-tab">
-						<div class="container_productos_eliminar">
-							<div class="mb-3">
-								<label for="buscador-producto" class="form-label">Buscar Producto</label>
-								<input type="text" name="buscador-producto" id="buscador-producto" class="form-control">
-							</div>
-							<div class="container_productos">
-								<!-- Aquí se llenarán los productos para eliminar -->
-								<div class="mt-3">
-									<img src="" alt="foto" class="img-fluid">
-									<div>Producto</div>
-									<div>Categoría</div>
-									<button class="btn btn-danger">Eliminar</button>
+						<!-- Eliminar Producto -->
+						<div class="tab-pane fade" id="eliminar-producto" role="tabpanel" aria-labelledby="eliminar-producto-tab">
+							<div class="container_productos_eliminar">
+								<div class="mb-3">
+									<label for="buscador-producto" class="form-label">Buscar Producto</label>
+									<input type="text" name="buscador-producto" id="buscador-producto" class="form-control">
+								</div>
+								<div class="container_productos">
+									<!-- Aquí se llenarán los productos para eliminar -->
+									<div class="mt-3">
+										<img src="" alt="foto" class="img-fluid">
+										<div>Producto</div>
+										<div>Categoría</div>
+										<button class="btn btn-danger">Eliminar</button>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
 
-					<!-- Eliminar Usuario -->
-					<div class="tab-pane fade" id="eliminar-usuario" role="tabpanel" aria-labelledby="eliminar-usuario-tab">
-						<div class="container_usuarios">
-							<div class="mb-3">
-								<label for="buscador-usuario" class="form-label">Buscar Usuario</label>
-								<input type="text" name="buscador-usuario" id="buscador-usuario" class="form-control">
-							</div>
-							<div class="container_users">
-								<!-- Aquí se llenarán los usuarios para eliminar -->
-								<div class="mt-3">
-									<img src="" alt="foto" class="img-fluid">
-									<div>Correo</div>
-									<button class="btn btn-danger">Eliminar</button>
+						<!-- Eliminar Usuario -->
+						<div class="tab-pane fade" id="eliminar-usuario" role="tabpanel" aria-labelledby="eliminar-usuario-tab">
+							<div class="container_usuarios">
+								<div class="mb-3">
+									<label for="buscador-usuario" class="form-label">Buscar Usuario</label>
+									<input type="text" name="buscador-usuario" id="buscador-usuario" class="form-control">
+								</div>
+								<div class="container_users">
+									<!-- Aquí se llenarán los usuarios para eliminar -->
+									<div class="mt-3">
+										<img src="" alt="foto" class="img-fluid">
+										<div>Correo</div>
+										<button class="btn btn-danger">Eliminar</button>
+									</div>
 								</div>
 							</div>
 						</div>
+					{% endif %}
+
+					<!-- Cambiar Contraseña -->
+					<div class="tab-pane fade {% if not is_granted('ROLE_ADMIN') %}show active{% endif %}" id="cambiar-password" role="tabpanel" aria-labelledby="cambiar-password-tab">
+						<form action="{{ path('cambiar_contrasena') }}" method="post" autocomplete="off">
+							<div class="mb-3">
+								<label for="current_password" class="form-label">Contraseña Actual</label>
+								<input type="password" name="current_password" id="current_password" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="new_password" class="form-label">Nueva Contraseña</label>
+								<input type="password" name="new_password" id="new_password" class="form-control" required>
+							</div>
+							<div class="mb-3">
+								<label for="confirm_password" class="form-label">Confirmar Nueva Contraseña</label>
+								<input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+							</div>
+							<div class="d-grid">
+								<button type="submit" class="btn btn-primary btn-block">Cambiar Contraseña</button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>

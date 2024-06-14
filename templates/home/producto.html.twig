@@ -7,8 +7,9 @@
 		<div class="row">
 			<div class="col-md-6 offset-md-3">
 				<h1>{{ producto.nombre }}</h1>
-				<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}" class="img-fluid">
+				<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}" class="img-fluid mb-3">
 				<p class="price"><strong>Precio:</strong> {{ producto.precio }}€</p>
+				<p class="stock"><strong>Stock disponible:</strong> {{ producto.stock }}</p>
 				<p>{{ producto.descripcion }}</p>
 				<button class="btn btn-primary add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>
 

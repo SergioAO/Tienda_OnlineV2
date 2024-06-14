@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -45,11 +46,19 @@ class Producto
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $estado = null;
 
-    #[ORM\OneToMany(mappedBy: 'idProducto', targetEntity: Compra::class)]
+    #[ORM\OneToMany(targetEntity: Compra::class, mappedBy: 'idProducto')]
     private Collection $compras;
 
-    #[ORM\OneToMany(mappedBy: 'producto', targetEntity: Pregunta::class, orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Pregunta::class, mappedBy: 'producto', orphanRemoval: true)]
     private Collection $preguntas;
+
+    #[ORM\OneToMany(targetEntity: NotificacionStock::class, mappedBy: 'producto', orphanRemoval: true)]
+    private Collection $notificacionesStock;
+
+    public function __construct()
+    {
+        $this->notificacionesStock = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -222,4 +231,31 @@ class Producto
         return $this;
     }
 
+    /**
+     * @return Collection<int, NotificacionStock>
+     */
+    public function getNotificacionesStock(): Collection
+    {
+        return $this->notificacionesStock;
+    }
+
+    public function addNotificacionStock(NotificacionStock $notificacionStock): self
+    {
+        if (!$this->notificacionesStock->contains($notificacionStock)) {
+            $this->notificacionesStock->add($notificacionStock);
+            $notificacionStock->setProducto($this);
+        }
+        return $this;
+    }
+
+    public function removeNotificacionStock(NotificacionStock $notificacionStock): self
+    {
+        if ($this->notificacionesStock->contains($notificacionStock)) {
+            $this->notificacionesStock->removeElement($notificacionStock);
+            if ($notificacionStock->getProducto() === $this) {
+                $notificacionStock->setProducto(null);
+            }
+        }
+        return $this;
+    }
 }

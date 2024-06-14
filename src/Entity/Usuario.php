@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -55,9 +56,16 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: DatoDePago::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $datoDePago;
+    #[ORM\OneToMany(targetEntity: NotificacionStock::class, mappedBy: 'usuario', orphanRemoval: true)]
+    private Collection $notificacionesStock;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $isVerified = 0;
+
+    public function __construct()
+    {
+        $this->notificacionesStock = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -288,6 +296,34 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->isVerified = $isVerified;
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NotificacionStock>
+     */
+    public function getNotificacionesStock(): Collection
+    {
+        return $this->notificacionesStock;
+    }
+
+    public function addNotificacionStock(NotificacionStock $notificacionStock): self
+    {
+        if (!$this->notificacionesStock->contains($notificacionStock)) {
+            $this->notificacionesStock->add($notificacionStock);
+            $notificacionStock->setUsuario($this);
+        }
+        return $this;
+    }
+
+    public function removeNotificacionStock(NotificacionStock $notificacionStock): self
+    {
+        if ($this->notificacionesStock->contains($notificacionStock)) {
+            $this->notificacionesStock->removeElement($notificacionStock);
+            if ($notificacionStock->getUsuario() === $this) {
+                $notificacionStock->setUsuario(null);
+            }
+        }
         return $this;
     }
 }

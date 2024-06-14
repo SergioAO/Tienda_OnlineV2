@@ -29,15 +29,21 @@ function mostrarProductos(categoria, productos) {
     </div>
     `);
   productos.forEach((element) => {
-    $("#products").append(`<div class="product-card">
-    <a class="product-link" href="/producto/detalle/${element.id}">
-        <img src="${element.imagen}" alt="${element.nombre}">
-        <h3>${element.nombre}</h3>
-    </a>
-    <p class="price">
-        <span class="current-price">${element.precio}€</span>
-    </p>
-    <button class="add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}">Añadir al carrito</button>
+    $("#products").append(`
+    <div class="product-card">
+        <a class="product-link" href="/producto/detalle/${element.id}">
+            <img src="${element.imagen}" alt="${element.nombre}">
+            <h3>${element.nombre}</h3>
+        </a>
+        <p class="price">
+            <span class="current-price">${element.precio}€</span>
+        </p>
+        <p class="stock">
+            <strong>Stock disponible:</strong> ${element.stock} unidades
+        </p>
+        <button class="add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}">
+            Añadir al carrito
+        </button>
     </div>`);
   });
 }

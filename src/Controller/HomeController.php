@@ -20,18 +20,22 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use App\Form\DireccionFormType;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class HomeController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
     private ProductoRepository $repo_producto;
     private UsuarioRepository $repo_usuario;
+    private $serializer;
 
-    public function __construct(EntityManagerInterface $entityManager, ProductoRepository $repo_producto, UsuarioRepository $repo_usuario)
+    public function __construct(EntityManagerInterface $entityManager, ProductoRepository $repo_producto, UsuarioRepository $repo_usuario, SerializerInterface $serializer)
     {
         $this->entityManager = $entityManager;
         $this->repo_producto = $repo_producto;
         $this->repo_usuario = $repo_usuario;
+        $this->serializer = $serializer;
     }
     #[Route('/', name: 'home')]
     public function index(): Response
@@ -87,6 +91,7 @@ class HomeController extends AbstractController
                 'id' => $producto->getId(),
                 'nombre' => $producto->getNombre(),
                 'imagen' => $producto->getImagen(),
+                'stock' => $producto->getStock(),
                 'precio' => $producto->getPrecio(),
             ];
         }
@@ -109,6 +114,7 @@ class HomeController extends AbstractController
                 'id' => $producto->getId(),
                 'nombre' => $producto->getNombre(),
                 'imagen' => $producto->getImagen(),
+                'stock' => $producto->getStock(),
                 'precio' => $producto->getPrecio(),
             ];
         }
@@ -194,7 +200,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/carrito_agregar', name: 'carrito_agregar', methods: ['POST'])]
-    public function carrito_agregar(Request $request, SessionInterface $session): Response
+    public function carrito_agregar(Request $request, SessionInterface $session, EntityManagerInterface $entityManager): Response
     {
         if (!$session->has('carrito')) {
             $session->set('carrito', []);
@@ -203,22 +209,37 @@ class HomeController extends AbstractController
         $id = $request->request->get('id');
         $nombre = $request->request->get('nombre');
         $precio = $request->request->get('precio');
+        $imagen = $request->request->get('imagen');
+
+        // Obtener el producto de la base de datos para verificar el stock
+        $producto = $entityManager->getRepository(Producto::class)->find($id);
+
+        if (!$producto) {
+            return new JsonResponse(['error' => 'Producto no encontrado'], Response::HTTP_NOT_FOUND);
+        }
+
+        $stockDisponible = $producto->getStock();
 
         // Obtener el carrito actual
         $carrito = $session->get('carrito');
         $productoEncontrado = false;
 
         // Verificar si el producto ya está en el carrito
-        foreach ($carrito as &$producto) {
-            if ($producto['id'] == $id) {
+        foreach ($carrito as &$productoEnCarrito) {
+            if ($productoEnCarrito['id'] == $id) {
                 $productoEncontrado = true;
                 // Si no existe la propiedad 'cantidad', inicializarla
-                if (!isset($producto['cantidad'])) {
-                    $producto['cantidad'] = 0;
+                if (!isset($productoEnCarrito['cantidad'])) {
+                    $productoEnCarrito['cantidad'] = 0;
                 }
-                // Incrementar la cantidad y actualizar el precio total
-                $producto['cantidad']++;
-                $producto['precio'] = $precio * $producto['cantidad'];
+
+                // Incrementar la cantidad pero no exceder el stock disponible
+                if ($productoEnCarrito['cantidad'] < $stockDisponible) {
+                    $productoEnCarrito['cantidad']++;
+                    $productoEnCarrito['precio_total'] = $precio * $productoEnCarrito['cantidad'];
+                } else {
+                    $productoEnCarrito['cantidad'] = $stockDisponible; // Ajustar a la cantidad máxima disponible en stock
+                }
                 break;
             }
         }
@@ -227,10 +248,10 @@ class HomeController extends AbstractController
         if (!$productoEncontrado) {
             $carrito[] = [
                 'id' => $id,
-                'imagen' => $request->request->get('imagen'),
+                'imagen' => $imagen,
                 'nombre' => $nombre,
                 'precio' => $precio,
-                'cantidad' => 1, // Inicializar la cantidad
+                'cantidad' => min(1, $stockDisponible), // Inicializar la cantidad pero no exceder el stock disponible
                 'precio_total' => $precio
             ];
         }
@@ -238,7 +259,11 @@ class HomeController extends AbstractController
         // Guardar el carrito actualizado en la sesión
         $session->set('carrito', $carrito);
 
-        return $this->json($carrito);
+        // Devolver la respuesta con el carrito y la cantidad actualizada
+        return $this->json([
+            'carrito' => $carrito,
+            'stock' => $stockDisponible
+        ]);
     }
 
     #[Route('/carrito_eliminar', name: 'carrito_eliminar', methods: ['POST'])]
@@ -399,9 +424,31 @@ class HomeController extends AbstractController
     #[Route('/buscarProducto', name: 'buscarProducto', methods: ['POST'])]
     public function buscarProductos(Request $request): Response
     {
-        $producto = strtolower($request->request->get('producto'));
+        $producto = $request->request->get('producto');
+
+        if ($producto === null) {
+            return $this->json(['message' => 'Parámetro de búsqueda faltante'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $producto = strtolower($producto);
+
         $lista = $this->buscarProducto($producto);
-        return $this->json($lista);
+
+        if (!$lista) {
+            return $this->json(['message' => 'No se encontraron productos.'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Configurar el serializador para manejar referencias circulares
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function ($object) {
+                return $object->getId();
+            },
+        ];
+
+        // Serializar la respuesta con el contexto configurado
+        $jsonContent = $this->serializer->serialize($lista, 'json', $context);
+
+        return new JsonResponse($jsonContent, Response::HTTP_OK, [], true);
     }
 
 
@@ -655,17 +702,33 @@ class HomeController extends AbstractController
                 return $this->redirectToRoute('carrito');
             }
 
+            // Verificar si hay suficiente stock
+            $cantidad = $productoData['cantidad'];
+            if ($producto->getStock() < $cantidad) {
+                // Si no hay suficiente stock, mostrar un mensaje de error
+                $this->addFlash('warning', 'No hay suficiente stock para el producto: ' . $producto->getNombre());
+                return $this->redirectToRoute('carrito');
+            }
+
+            // Reducir el stock del producto
+            $producto->setStock($producto->getStock() - $cantidad);
+
+            // Crear una nueva instancia de Compra
             $compra = new Compra();
             $compra->setIdPedido($pedido);
             $compra->setIdProducto($producto);
-            $compra->setUnidades($productoData['cantidad']);
+            $compra->setUnidades($cantidad);
 
-            // Convertir el precio de compra a un número flotante y guardarlo como string
-            $precioCompra = floatval($productoData['precio']) * floatval($productoData['cantidad']);
+            // Calcular el precio total de la compra y guardarlo
+            $precioCompra = floatval($productoData['precio']) * floatval($cantidad);
             $compra->setPrecio_compra((string) $precioCompra);
 
+            // Añadir la compra al pedido
             $pedido->addCompra($compra);
+
+            // Persistir la compra y el producto (con stock actualizado)
             $em->persist($compra);
+            $em->persist($producto);
         }
 
         // Guardar los cambios en la base de datos

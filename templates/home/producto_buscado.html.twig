@@ -20,6 +20,7 @@
                                 {% if producto.descuento %}
                                     <p class="card-text text-danger"><strong>Descuento: </strong>{{ producto.descuento }}%</p>
                                 {% endif %}
+                                <p class="card-text"><strong>Stock disponible: </strong>{{ producto.stock }}</p>
                             </div>
                             <div class="card-footer">
                                 <a href="{{ path('producto_detalle', { 'id': producto.id }) }}" class="btn btn-info">Ver Detalles</a>

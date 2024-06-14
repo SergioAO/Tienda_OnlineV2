@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Correo de Restablecimiento de Contraseña Enviado{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card shadow-sm" style="width: 500px;">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Correo Enviado</h2>
+                <p>
+                    Si existe una cuenta que coincide con su correo electrónico, se acaba de enviar un correo electrónico que contiene un enlace que puede utilizar para restablecer su contraseña.
+                    Este enlace caducará en {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                </p>
+                <p>Si no recibe un correo electrónico, revise su carpeta de spam o <a href="{{ path('app_forgot_password_request') }}" class="btn btn-link">Intentalo de nuevo</a>.</p>
+                <div class="text-center mt-4">
+                    <a href="{{ path('home') }}" class="btn btn-primary">Volver al Inicio</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

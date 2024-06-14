@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cambia tu contraseña{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="card" style="width: 400px;">
+            <div class="card-body">
+                <h1 class="card-title text-center">Cambia tu contraseña</h1>
+
+                {{ form_start(resetForm) }}
+                <div class="form-group mb-3">
+                    {{ form_label(resetForm.plainPassword.first, 'Nueva contraseña') }}
+                    {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form_label(resetForm.plainPassword.second, 'Repite contraseña') }}
+                    {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Cambia tu contraseña</button>
+                {{ form_end(resetForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

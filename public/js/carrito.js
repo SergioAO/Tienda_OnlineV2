@@ -17,27 +17,36 @@ $(document).on("click", ".add-to-cart", function() {
     success: function(response) {
       // Buscar si el producto ya está en el carrito
       let productoExistente = $(".producto-en-carrito[data-id='" + id + "']");
+      let stockDisponible = response.stock;
+      let cantidadActual;
+
       if (productoExistente.length) {
         // Producto ya existe, actualizar cantidad y precio
-        let cantidadActual = parseInt(productoExistente.find('.cantidad-producto').text());
-        productoExistente.find('.cantidad-producto').text(cantidadActual + 1);
-        productoExistente.find('.precio-producto').text((precio * (cantidadActual + 1)).toFixed(2) + "€");
+        cantidadActual = parseInt(productoExistente.find('.cantidad-producto').text());
+        let nuevaCantidad = cantidadActual + 1;
+
+        if (nuevaCantidad > stockDisponible) {
+          nuevaCantidad = stockDisponible; // Ajustar a la cantidad máxima disponible en stock
+        }
+
+        productoExistente.find('.cantidad-producto').text(nuevaCantidad);
+        productoExistente.find('.precio-producto').text((precio * nuevaCantidad).toFixed(2) + "€");
       } else {
         // Producto no existe, añadir nuevo elemento al carrito
         $(".carrito-compra").append(
             `<li class="list-group-item">
-                <div class="producto-en-carrito d-flex align-items-center" data-id="${id}">
-                    <img src="${imagen}" class="img-thumbnail me-3" style="width: 50px; height: 50px;" alt="${nombre}">
-                    <div class="flex-grow-1">
-                        <strong>${nombre}</strong> - 
-                        <span class="precio-producto">${precio}€</span>
-                    </div>
-                    <button data-id="${id}" class="btn btn-danger btn-sm eliminar-producto-carrito me-2">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                    <span class="cantidad-producto badge bg-primary rounded-pill">1</span>
-                </div>
-            </li>`
+                        <div class="producto-en-carrito d-flex align-items-center" data-id="${id}">
+                            <img src="${imagen}" class="img-thumbnail me-3" style="width: 50px; height: 50px;" alt="${nombre}">
+                            <div class="flex-grow-1">
+                                <strong>${nombre}</strong> - 
+                                <span class="precio-producto">${precio}€</span>
+                            </div>
+                            <button data-id="${id}" class="btn btn-danger btn-sm eliminar-producto-carrito me-2">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                            <span class="cantidad-producto badge bg-primary rounded-pill">1</span>
+                        </div>
+                    </li>`
         );
       }
 

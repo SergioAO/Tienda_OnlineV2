@@ -24,10 +24,11 @@ class RegistroFormType extends AbstractType
             ->add('apellidos')
             ->add('email', EmailType::class, [
                 'required' => true,
+                'attr' => ['autocomplete' => 'off'],
             ])
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => ['autocomplete' => 'off'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Por favor, introduce una contraseña',
