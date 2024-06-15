@@ -33,7 +33,6 @@ class Pedido
         $this->compras = new ArrayCollection();
     }
 
-
     public function getId(): ?int
     {
         return $this->id;

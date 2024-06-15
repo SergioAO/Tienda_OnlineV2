@@ -3,7 +3,7 @@ function validaLogin(ev) {
     var pass = document.getElementById("password").value;
     // Expresión regular para validar el correo
     const patronCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/;
-    const patronPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+    const patronPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
     if (correo == "") {
         alert("Correo vacío");
         ev.preventDefault();
@@ -19,13 +19,13 @@ function validaLogin(ev) {
                 ev.preventDefault();
             }
             else {
-                if (pass.length < 6) {
-                    alert("Contraseña de menos de 6 caracteres");
+                if (pass.length < 8) {
+                    alert("Contraseña de menos de 8 caracteres");
                     ev.preventDefault();
                 }
                 else {
                     if (!patronPass.test(pass)) {
-                        alert("La contraseña no es válida. Debe contener al menos 6 caracteres, un número, una letra mayúscula y una letra minúscula");
+                        alert("La contraseña no es válida. Debe contener al menos 8 caracteres, un número, una letra mayúscula y una letra minúscula");
                         ev.preventDefault();
                     }
                 }

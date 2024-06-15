@@ -31,7 +31,7 @@ function mostrarProductos(categoria, productos) {
   productos.forEach((element) => {
     // Crear la estructura base del producto
     let productCard = `
-    <div class="product-card ${element.stock === 0 ? 'out-of-stock' : ''}">
+    <div class="product-card ${element.stock === 0 ? 'out-of-stock' : ''}" draggable="true" ondragstart="drag(event)" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}" data-imagen="${element.imagen}">
         <a class="product-link" href="/producto/detalle/${element.id}">
             <img src="${element.imagen}" alt="${element.nombre}">
             <h3>${element.nombre}</h3>
@@ -47,13 +47,13 @@ function mostrarProductos(categoria, productos) {
     // Añadir el botón correspondiente dependiendo del stock
     if (element.stock > 0) {
       productCard += `
-        <button class="btn btn-primary add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}">
+        <button class="btn btn-primary add-to-cart" data-id="${element.id}" data-nombre="${element.nombre}" data-precio="${element.precio}" data-imagen="${element.imagen}">
             Añadir al carrito
         </button>
         `;
     } else {
       productCard += `
-        <button class="btn btn-primary notify-me" data-id="${element.id}" data-nombre="${element.nombre}" data-email="${element.email}">
+        <button class="btn btn-primary notify-me" data-id="${element.id}" data-nombre="${element.nombre}" data-email="${element.email}" data-imagen="${element.imagen}">
             Notificarme cuando haya stock
         </button>
         `;

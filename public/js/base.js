@@ -63,11 +63,11 @@ function pedirCarrito() {
         totalPrecio += element.precio * element.cantidad;
         $(".carrito-compra").append(
             `<li class="list-group-item">
-                <div class="producto-en-carrito d-flex align-items-center" data-id="${element.id}">
+                <div class="producto-en-carrito d-flex align-items-center" data-id="${element.id}" draggable="true" ondragstart="dragStart(event)" ondragend="dragEndEliminar(event)">
                     <img src="${element.imagen}" class="img-thumbnail me-3" style="width: 50px; height: 50px;" alt="${element.nombre}">
                     <div class="flex-grow-1">
                         <strong>${element.nombre}</strong> - 
-                        <span class="precio-producto">${element.precio}€</span>
+                        <span class="precio-producto">${(element.precio * element.cantidad).toFixed(2)}€</span>
                     </div>
                     <button data-id="${element.id}" class="btn btn-danger btn-sm eliminar-producto-carrito me-2">
                         <i class="bi bi-trash"></i>

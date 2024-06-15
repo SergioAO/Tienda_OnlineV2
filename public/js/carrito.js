@@ -35,7 +35,7 @@ $(document).on("click", ".add-to-cart", function() {
         // Producto no existe, añadir nuevo elemento al carrito
         $(".carrito-compra").append(
             `<li class="list-group-item">
-                        <div class="producto-en-carrito d-flex align-items-center" data-id="${id}">
+                        <div class="producto-en-carrito d-flex align-items-center" data-id="${id}" draggable="true" ondragstart="dragStart(event)" ondragend="dragEndEliminar(event)">
                             <img src="${imagen}" class="img-thumbnail me-3" style="width: 50px; height: 50px;" alt="${nombre}">
                             <div class="flex-grow-1">
                                 <strong>${nombre}</strong> - 
@@ -102,3 +102,27 @@ $(document).on("click", ".eliminar-producto-carrito", function() {
   });
 });
 
+$(document).ready(function() {
+  $('#vaciar-carrito').on('click', function() {
+    if (confirm('¿Estás seguro de que quieres vaciar tu carrito?')) {
+      $.ajax({
+        url: ruta_borrar_sesion_carrito,
+        type: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+          if (response.success) {
+            // Recargar la página para reflejar el carrito vacío
+            location.reload();
+          } else {
+            alert('Hubo un problema al vaciar el carrito.');
+          }
+        },
+        error: function(error) {
+          console.error('Error:', error);
+        }
+      });
+    }
+  });
+});

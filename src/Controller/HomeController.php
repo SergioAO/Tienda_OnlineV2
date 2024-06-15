@@ -304,6 +304,32 @@ class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/carrito_eliminarT', name: 'carrito_eliminarT', methods: ['POST'])]
+    public function carrito_eliminarT(Request $request, SessionInterface $session): Response
+    {
+        $id = $request->request->get('id');
+        $carrito = $session->get('carrito');
+        $precioTotal = 0;
+
+        for ($i = 0; $i < count($carrito); $i++) {
+            if ($carrito[$i]['id'] == $id) {
+                    array_splice($carrito, $i, 1);
+                
+                break;
+            }
+        }
+
+        foreach ($carrito as $producto) {
+            $precioTotal += $producto['precio'];
+        }
+
+        $session->set('carrito', $carrito);
+        return $this->json([
+            'carrito' => $carrito,
+            'precioTotal' => $precioTotal
+        ]);
+    }
+
     #[Route('/ver_carrito', name: 'ver_carrito', methods: ['GET'])]
     public function verCarrito(SessionInterface $session): Response
     {
@@ -751,5 +777,15 @@ class HomeController extends AbstractController
             'compras' => $comprasArray,
             'pedido' => $pedido,
         ]);
+    }
+
+    #[Route('/carrito/vaciar', name: 'vaciar_carrito', methods: ['POST'])]
+    public function vaciarCarrito(SessionInterface $session): JsonResponse
+    {
+        // Elimina el carrito de la sesión
+        $session->remove('carrito');
+
+        // Devuelve una respuesta JSON para indicar que la operación fue exitosa
+        return new JsonResponse(['success' => true]);
     }
 }

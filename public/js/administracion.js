@@ -44,6 +44,7 @@ function buscarUsuario(nombre) {
     },
   });
 }
+
 function buscarProducto(nombre) {
   $.ajax({
     type: "post",
@@ -55,15 +56,18 @@ function buscarProducto(nombre) {
     success: function (response) {
       $(".container_productos").empty();
       response.forEach((element) => {
-        $(".container_productos").append(`<div>
-				<img src="${element.imagen}" alt="foto">
-				<div>${element.nombre}</div>
-				<button class="eliminar-product" data-id="${element.id}">Eliminar</button>
-			</div>`);
+        $(".container_productos").append(`
+          <div>
+              <img src="${element.imagen}" alt="foto" class="product-image">
+              <div>${element.nombre}</div>
+              <button class="eliminar-product" data-id="${element.id}">Eliminar</button>
+          </div>
+        `);
       });
     },
   });
 }
+
 $(document).on("click", ".eliminar-product", function () {
   let id = $(this).data("id");
   $(this).parent().remove();

@@ -24,7 +24,7 @@
 				<div class="tab-pane fade {% if loop.first %}show active{% endif %}" id="content-{{ categoria.categoria }}" role="tabpanel" aria-labelledby="tab-{{ categoria.categoria }}">
 					<div id="products" class="product-list">
 						{% for producto in productos %}
-							<div class="product-card {% if producto.stock == 0 %}out-of-stock{% endif %}">
+							<div class="product-card {% if producto.stock == 0 %}out-of-stock{% endif %}" draggable="true" ondragstart="drag(event)" data-id="{{producto.id}}" data-nombre="{{producto.nombre}}" data-precio="{{producto.precio}}" data-imagen="{{producto.imagen}}" data-stock="{{producto.stock}}">
 								<a class="product-link" href="{{ path('producto_detalle', { 'id': producto.id }) }}">
 									<img src="{{ asset(producto.imagen) }}" alt="{{ producto.nombre }}">
 									<h3>{{ producto.nombre }}</h3>
@@ -34,6 +34,23 @@
 								</p>
 								<p class="stock">
 									<span class="current-stock">Stock: {{ producto.stock }}</span>
+								</p>
+								<p class="interaccion">
+								<button class="btn btn-outline-secondary like" data-id="{{ producto.id }}" 
+									{% if app.user %}
+										data-userid="{{ app.user.id }}"
+									{% endif %}
+									>
+									<i class="bi bi-hand-thumbs-up"></i> 
+								</button>
+								<button class="btn btn-outline-secondary dislike" data-id="{{ producto.id }}" 
+									{% if app.user %}
+										data-userid="{{ app.user.id }}"
+									{% endif %}
+									>
+									<i class="bi bi-hand-thumbs-down"></i> 
+								</button>
+										
 								</p>
 								{% if producto.stock > 0 %}
 									<button class="btn btn-primary w-100 add-to-cart" data-id="{{ producto.id }}" data-nombre="{{ producto.nombre }}" data-precio="{{ producto.precio }}" data-imagen="{{ producto.imagen }}">Añadir al carrito</button>

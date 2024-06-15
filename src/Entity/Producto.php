@@ -46,19 +46,8 @@ class Producto
     #[ORM\Column(type: 'boolean', nullable: true)]
     private ?bool $estado = null;
 
-    #[ORM\OneToMany(targetEntity: Compra::class, mappedBy: 'idProducto')]
-    private Collection $compras;
-
     #[ORM\OneToMany(targetEntity: Pregunta::class, mappedBy: 'producto', orphanRemoval: true)]
     private Collection $preguntas;
-
-    #[ORM\OneToMany(targetEntity: NotificacionStock::class, mappedBy: 'producto', orphanRemoval: true)]
-    private Collection $notificacionesStock;
-
-    public function __construct()
-    {
-        $this->notificacionesStock = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -176,34 +165,6 @@ class Producto
     }
 
     /**
-     * @return Collection<int, Compra>
-     */
-    public function getCompras(): Collection
-    {
-        return $this->compras;
-    }
-
-    public function addCompra(Compra $compra): self
-    {
-        if (!$this->compras->contains($compra)) {
-            $this->compras->add($compra);
-            $compra->setIdProducto($this);
-        }
-        return $this;
-    }
-
-    public function removeCompra(Compra $compra): self
-    {
-        if ($this->compras->contains($compra)) {
-            $this->compras->removeElement($compra);
-            if ($compra->getIdProducto() === $this) {
-                $compra->setIdProducto(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Pregunta>
      */
     public function getPreguntas(): Collection
@@ -226,34 +187,6 @@ class Producto
             $this->preguntas->removeElement($pregunta);
             if ($pregunta->getProducto() === $this) {
                 $pregunta->setProducto(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, NotificacionStock>
-     */
-    public function getNotificacionesStock(): Collection
-    {
-        return $this->notificacionesStock;
-    }
-
-    public function addNotificacionStock(NotificacionStock $notificacionStock): self
-    {
-        if (!$this->notificacionesStock->contains($notificacionStock)) {
-            $this->notificacionesStock->add($notificacionStock);
-            $notificacionStock->setProducto($this);
-        }
-        return $this;
-    }
-
-    public function removeNotificacionStock(NotificacionStock $notificacionStock): self
-    {
-        if ($this->notificacionesStock->contains($notificacionStock)) {
-            $this->notificacionesStock->removeElement($notificacionStock);
-            if ($notificacionStock->getProducto() === $this) {
-                $notificacionStock->setProducto(null);
             }
         }
         return $this;
