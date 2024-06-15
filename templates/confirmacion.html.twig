@@ -1,0 +1,20 @@
+{# templates/confirmacion.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmación{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="alert alert-success" role="alert">
+            {% if tipo == 'producto' %}
+                Producto {{ accion }} con éxito.
+            {% elseif tipo == 'usuario' %}
+                Usuario {{ accion }} con éxito.
+            {% elseif tipo == 'contraseña' %}
+                Contraseña {{ accion }} con éxito.
+            {% endif %}
+        </div>
+        <a href="{{ path('administracion') }}" class="btn btn-primary">Volver a Administración</a>
+    </div>
+{% endblock %}

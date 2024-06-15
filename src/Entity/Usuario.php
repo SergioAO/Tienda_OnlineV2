@@ -53,19 +53,9 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: DatoDePago::class, mappedBy: 'usuario', orphanRemoval: true)]
     private Collection $datoDePago;
-    #[ORM\OneToMany(targetEntity: NotificacionStock::class, mappedBy: 'usuario', orphanRemoval: true)]
-    private Collection $notificacionesStock;
-    #[ORM\OneToMany(targetEntity: Interaccion::class, mappedBy: 'usuario')]
-    private Collection $interacciones;
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $isVerified = 0;
-
-    public function __construct()
-    {
-        $this->notificacionesStock = new ArrayCollection();
-        $this->interacciones = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -267,64 +257,6 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function setVerified(int $isVerified): self
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, NotificacionStock>
-     */
-    public function getNotificacionesStock(): Collection
-    {
-        return $this->notificacionesStock;
-    }
-
-    public function addNotificacionStock(NotificacionStock $notificacionStock): self
-    {
-        if (!$this->notificacionesStock->contains($notificacionStock)) {
-            $this->notificacionesStock->add($notificacionStock);
-            $notificacionStock->setUsuario($this);
-        }
-        return $this;
-    }
-
-    public function removeNotificacionStock(NotificacionStock $notificacionStock): self
-    {
-        if ($this->notificacionesStock->contains($notificacionStock)) {
-            $this->notificacionesStock->removeElement($notificacionStock);
-            if ($notificacionStock->getUsuario() === $this) {
-                $notificacionStock->setUsuario(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Interaccion>
-     */
-    public function getInteracciones(): Collection
-    {
-        return $this->interacciones;
-    }
-
-    public function addInteraccion(Interaccion $interaccion): self
-    {
-        if (!$this->interacciones->contains($interaccion)) {
-            $this->interacciones->add($interaccion);
-            $interaccion->setUsuario($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInteraccion(Interaccion $interaccion): self
-    {
-        if ($this->interacciones->removeElement($interaccion)) {
-            // set the owning side to null (unless already changed)
-            if ($interaccion->getUsuario() === $this) {
-                $interaccion->setUsuario(null);
-            }
-        }
 
         return $this;
     }

@@ -393,6 +393,7 @@ class HomeController extends AbstractController
             'marcas' => $marcas
         ]);
     }
+
     #[Route('/nuevoProducto', name: 'nuevoProducto')]
     public function nuevoProducto(): Response
     {
@@ -413,7 +414,7 @@ class HomeController extends AbstractController
         if (isset($_FILES['foto']) && strlen($_FILES['foto']['name'])) {
             $this->guardarArchivo($_FILES['foto']);
         }
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('confirmacion', ['accion' => 'agregado', 'tipo' => 'producto']);
     }
 
     private function guardarArchivo($file)
@@ -442,9 +443,9 @@ class HomeController extends AbstractController
     private function buscarProducto($parametro)
     {
         return $this->repo_producto->createQueryBuilder('p')
-            ->andWhere("LOWER(p.nombre) LIKE '%" . $parametro . "%'")
-            ->orWhere("LOWER(p.categoria) LIKE '%" . $parametro . "%'")
-            ->orWhere("LOWER(p.marca) LIKE '%" . $parametro . "%'")
+            ->andWhere("LOWER(p.nombre) LIKE '" . $parametro . "%'")
+            ->orWhere("LOWER(p.categoria) LIKE '" . $parametro . "%'")
+            ->orWhere("LOWER(p.marca) LIKE '" . $parametro . "%'")
             ->getQuery()->getResult();
     }
     private function buscarUsuario($parametro)
@@ -501,17 +502,31 @@ class HomeController extends AbstractController
         $user = $this->repo_usuario->find($id);
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        return $this->json($user);
+
+        return $this->redirectToRoute('confirmacion', ['accion' => 'eliminado', 'tipo' => 'usuario']);
     }
 
     #[Route('/eliminarProducto', name: 'eliminarProducto', methods: ['POST'])]
-    public function eliminarProducto(Request $request, SessionInterface $session): Response
+    public function eliminarProducto(Request $request): Response
     {
         $id = $request->request->get('id');
         $product = $this->repo_producto->find($id);
         $this->entityManager->remove($product);
         $this->entityManager->flush();
-        return $this->json($product);
+
+        return $this->redirectToRoute('confirmacion', ['accion' => 'eliminado', 'tipo' => 'producto']);
+    }
+
+    #[Route('/confirmacion', name: 'confirmacion')]
+    public function mostrar(Request $request): Response
+    {
+        $accion = $request->query->get('accion');
+        $tipo = $request->query->get('tipo');
+
+        return $this->render('confirmacion.html.twig', [
+            'accion' => $accion,
+            'tipo' => $tipo,
+        ]);
     }
 
     #[Route('/ingresar_direccion', name: 'ingresar_direccion')]

@@ -3,10 +3,13 @@
 {% block title %}Detalle del Producto{% endblock %}
 
 {% block head %}
+	<meta name="csrf-token" content="{{ csrf_token('delete_comment') }}">
 	<script>
-		const ruta_stock_producto = "{{ path('actualizar_stock_producto') }}"
+		const ruta_stock_producto = "{{ path('actualizar_stock_producto') }}";
+		const ruta_base_eliminar_comentario = "{{ path('borrar_comentario', {'id': 'ID_PLACEHOLDER'}) }}";
 	</script>
 	<script src="{{ asset('js/stock.js') }}" defer></script>
+	<script src="{{ asset('js/comentarios.js') }}" defer></script>
 {% endblock %}
 
 {% block body %}
@@ -51,6 +54,11 @@
 										<p><strong>{{ pregunta.usuario.nombre }}:</strong> {{ pregunta.texto }}</p>
 										<small class="text-muted">{{ pregunta.fecha|date('d-m-Y H:i') }}</small>
 									</div>
+									{% if app.user and (is_granted('ROLE_ADMIN') or app.user == pregunta.usuario) %}
+										<button class="btn btn-link text-danger p-0 ms-auto delete-comment" data-id="{{ pregunta.id }}" title="Eliminar comentario">
+											<i class="bi bi-trash"></i>
+										</button>
+									{% endif %}
 								</div>
 							</li>
 						{% endfor %}
@@ -80,5 +88,4 @@
 
 {% block javascripts %}
 	{{ encore_entry_script_tags('app') }}
-
 {% endblock %}

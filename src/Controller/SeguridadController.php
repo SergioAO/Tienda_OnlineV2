@@ -95,6 +95,6 @@ class SeguridadController extends AbstractController
 
         $this->addFlash('success', 'La contraseña ha sido cambiada con éxito.');
 
-        return $this->redirectToRoute('administracion');
+        return $this->redirectToRoute('confirmacion', ['accion' => 'cambiada', 'tipo' => 'contraseña']);
     }
 }

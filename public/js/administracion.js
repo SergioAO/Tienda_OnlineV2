@@ -70,31 +70,52 @@ function buscarProducto(nombre) {
 
 $(document).on("click", ".eliminar-product", function () {
   let id = $(this).data("id");
-  $(this).parent().remove();
+
   $.ajax({
     type: "post",
     url: ruta_eliminar_productos,
     data: {
       id: id,
     },
-    dataType: "json",
     success: function (response) {
-      console.log(response);
+      window.location.href = '/confirmacion?accion=eliminado&tipo=producto';
     },
   });
 });
+
 $(document).on("click", ".eliminar-user", function () {
   let id = $(this).data("id");
-  $(this).parent().remove();
+
   $.ajax({
     type: "post",
     url: ruta_eliminar_usuario,
     data: {
       id: id,
     },
-    dataType: "json",
     success: function (response) {
-      console.log(response);
+        window.location.href = '/confirmacion?accion=eliminado&tipo=usuario';
+    },
+  });
+});
+
+$("form").on("submit", function (e) {
+  e.preventDefault();
+  const form = $(this);
+  const action = form.attr('action');
+  const formData = new FormData(this);
+
+  $.ajax({
+    type: "post",
+    url: action,
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      if (action.includes('nuevoProducto')) {
+        window.location.href = '/confirmacion?accion=agregado&tipo=producto';
+      } else if (action.includes('/cambiar-contrasena')) {
+        window.location.href = '/confirmacion?accion=cambiada&tipo=contraseña';
+      }
     },
   });
 });
